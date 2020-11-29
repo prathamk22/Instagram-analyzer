@@ -1,4 +1,4 @@
-package com.pratham.project.fileio.data.remote
+package com.pratham.project.fileio.utils.network
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

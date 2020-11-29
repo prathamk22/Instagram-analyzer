@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [],
+    entities = [Files::class],
     exportSchema = true,
     version = 4
 )
