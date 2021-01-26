@@ -12,7 +12,9 @@ class PreferenceManager constructor(
     companion object{
         const val SHARED_PREFS_NAME: String = "instagram-prefs"
         const val LOGIN_COOKIES = "loginCookies"
-        const val USER_AGENT = "userAgent"
+        const val USER_NAME = "userName"
+        const val FULL_NAME = "fullName"
+        const val USER_PROFILE_IMG = "userProfileImg"
     }
 
     private val sharedPrefs: SharedPreferences
@@ -27,10 +29,22 @@ class PreferenceManager constructor(
             sharedPrefs.save(LOGIN_COOKIES, value)
         }
 
-    var userAgent: String
-        get() = sharedPrefs.getString(USER_AGENT, "")?:""
+    var userName: String
+        get() = sharedPrefs.getString(USER_NAME, "")?:""
         set(value) {
-            sharedPrefs.save(USER_AGENT, value)
+            sharedPrefs.save(USER_NAME, value)
+        }
+
+    var fullName: String
+        get() = sharedPrefs.getString(FULL_NAME, "")?:""
+        set(value) {
+            sharedPrefs.save(FULL_NAME, value)
+        }
+
+    var userProfileImg: String
+        get() = sharedPrefs.getString(USER_PROFILE_IMG, "")?:""
+        set(value) {
+            sharedPrefs.save(USER_PROFILE_IMG, value)
         }
 
 }

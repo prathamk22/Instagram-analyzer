@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="prefs"
+            type="com.pratham.project.fileio.data.PreferenceManager" />
+
+    </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +21,56 @@
         <WebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="@{ prefs.loginCookies != `` ? View.GONE : View.VISIBLE }" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/userCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:visibility="@{ prefs.loginCookies == `` ? View.GONE : View.VISIBLE }"
+            app:cardCornerRadius="8dp">
+
+            <com.pratham.project.fileio.utils.widgits.MyConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp18">
+
+                <com.pratham.project.fileio.utils.widgits.MyImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="@dimen/dp50"
+                    android:layout_height="@dimen/dp50"
+                    app:cornerRadius="25dp"
+                    app:imageUrl="@{prefs.userProfileImg}" />
+
+                <com.pratham.project.fileio.utils.widgits.MyTextView
+                    android:id="@+id/username"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@{prefs.userName}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/userImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.pratham.project.fileio.utils.widgits.MyTextView
+                    android:id="@+id/fullName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@{prefs.fullName}"
+                    android:textColor="#eeeeee"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/userImage"
+                    app:layout_constraintTop_toBottomOf="@id/username" />
+
+            </com.pratham.project.fileio.utils.widgits.MyConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </FrameLayout>
 

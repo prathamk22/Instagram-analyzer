@@ -9,6 +9,8 @@ class HomeRepository(
     private val prefsManager: PreferenceManager
 ) {
 
-    suspend fun getUserDetails() = safeApiCall { instagramAPICalls.getUserDetails("new_amoled_wallpapers") }
+    suspend fun getUserDetails() = safeApiCall { instagramAPICalls.getUserDetails(prefsManager.userName) }
+
+    suspend fun allowUserDetails() = safeApiCall { instagramAPICalls.allowUserEdit() }
 
 }
