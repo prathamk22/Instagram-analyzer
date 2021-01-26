@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.pratham.project.fileio.data.PreferenceManager
+import com.pratham.project.fileio.data.local.models.UserXXX
 import com.pratham.project.fileio.data.remote.models.UsernameInfo
 import com.pratham.project.fileio.utils.base.BaseViewModel
-import com.pratham.project.fileio.utils.network.ResultWrapper
+import com.pratham.project.fileio.data.utils.ResultWrapper
+import com.pratham.project.fileio.data.utils.toLocalUser
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -39,6 +41,26 @@ class HomeViewModel(
                             this?.profilePicUrl?.let { prefsManager.userProfileImg = it }
                             this?.pk?.let { prefsManager.userProfileId = it }
                         }
+                        refreshUserDetails()
+                        _userDetails.postValue(response.value.body())
+                    } else {
+                        Log.e("TAG", "getUserDetails: ${response.value.message()}" )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun refreshUserDetails(){
+        viewModelScope.launch {
+            when(val response = repo.getUserDetails()){
+                is ResultWrapper.GenericError -> {
+                    Log.e("TAG", "getUserDetails: ${response.error}" )
+                }
+                is ResultWrapper.Success -> {
+                    if (response.value.isSuccessful) {
+                        val userDetails = response.value.body()
+                        repo.addUserToLocal(userDetails?.user)
                         getAllFollowers()
                         getAllFollowings()
                         getLikesFromFeeds()
@@ -61,7 +83,7 @@ class HomeViewModel(
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val userDetails = response.value.body()
-                        Log.e("TAG", "getAllFollowers: $userDetails")
+                        repo.addFollowersToLocal(userDetails?.users)
                     } else {
                         Log.e("TAG", "getAllFollowers: ${response.value.message()}")
                     }
@@ -77,9 +99,9 @@ class HomeViewModel(
                     Log.e("TAG", "getAllFollowings: ${response.error}" )
                 }
                 is ResultWrapper.Success -> {
-                    if (response.value.isSuccessful) {
+                    if (response.value.isSuccessful || response.value.body() != null) {
                         val userDetails = response.value.body()
-                        Log.e("TAG", "getAllFollowings: $userDetails")
+                        repo.addFollowingsToLocal(userDetails?.users.toLocalUser())
                     } else {
                         Log.e("TAG", "getAllFollowings: ${response.value.message()}")
                     }
@@ -97,7 +119,6 @@ class HomeViewModel(
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val userDetails = response.value.body()
-                        Log.e("TAG", "getLikesFromFeeds: $userDetails")
                     } else {
                         Log.e("TAG", "getLikesFromFeeds: ${response.value.message()}")
                     }
@@ -115,7 +136,6 @@ class HomeViewModel(
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val userDetails = response.value.body()
-                        Log.e("TAG", "getLikesFromFeeds: $userDetails")
                     } else {
                         Log.e("TAG", "getLikesFromFeeds: ${response.value.message()}")
                     }

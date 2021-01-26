@@ -1,4 +1,4 @@
-package com.pratham.project.fileio.utils.network
+package com.pratham.project.fileio.data.utils
 
 import android.content.Context
 import com.pratham.project.fileio.data.PreferenceManager

@@ -6,8 +6,6 @@ import com.pratham.project.fileio.data.PreferenceManager
 import com.pratham.project.fileio.data.local.AppDatabase
 import com.pratham.project.fileio.data.remote.InstagramAPI
 import com.pratham.project.fileio.data.remote.InstagramAPICalls
-import com.pratham.project.fileio.ui.files.FilesRepository
-import com.pratham.project.fileio.ui.files.FilesViewModel
 import com.pratham.project.fileio.ui.home.HomeRepository
 import com.pratham.project.fileio.ui.home.HomeViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -16,10 +14,8 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get(), get()) }
-    viewModel { FilesViewModel(get()) }
 
-    single { FilesRepository() }
-    single { HomeRepository(get(), get()) }
+    single { HomeRepository(get(), get(), get(), get(), get()) }
 }
 
 val instagramApiModule = module {
@@ -50,9 +46,19 @@ val databaseModule = module {
             .build()
     }
 
-//    factory {
-//        val database: AppDatabase = get()
-//        database.getSemesterDao()
-//    }
+    factory {
+        val database: AppDatabase = get()
+        database.getUsernameDao()
+    }
+
+    factory {
+        val database: AppDatabase = get()
+        database.getFollowersDao()
+    }
+
+    factory {
+        val database: AppDatabase = get()
+        database.getFollowingDao()
+    }
 
 }

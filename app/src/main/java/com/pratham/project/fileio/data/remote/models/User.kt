@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class User(
-        @SerializedName("account_badges") @Expose val accountBadges: List<Any>? = null,
+        @SerializedName("account_badges") @Expose val accountBadges: List<String>? = null,
         @SerializedName("account_type") @Expose val accountType: Int? = null,
         @SerializedName("address_street") @Expose val addressStreet: String? = null,
         @SerializedName("ads_page_id") @Expose val adsPageId: Any? = null,

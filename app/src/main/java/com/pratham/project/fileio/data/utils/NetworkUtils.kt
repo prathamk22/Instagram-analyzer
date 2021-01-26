@@ -1,4 +1,4 @@
-package com.pratham.project.fileio.utils.network
+package com.pratham.project.fileio.data.utils
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -18,25 +18,25 @@ suspend fun <T> safeApiCall(
         } catch (throwable: Throwable) {
             when (throwable) {
                 is IOException -> ResultWrapper.GenericError(
-                    103,
-                    "Not Connected To Internet"
+                        103,
+                        "Not Connected To Internet"
                 )
                 is UnknownHostException -> ResultWrapper.GenericError(
-                    101,
-                    ErrorStatus.NO_CONNECTION
+                        101,
+                        ErrorStatus.NO_CONNECTION
                 )
                 is SocketTimeoutException -> ResultWrapper.GenericError(
-                    102,
-                    ErrorStatus.TIMEOUT
+                        102,
+                        ErrorStatus.TIMEOUT
                 )
                 is HttpException -> ResultWrapper.GenericError(
-                    throwable.code(),
-                    "HttpException"
+                        throwable.code(),
+                        "HttpException"
                 )
                 else -> {
                     ResultWrapper.GenericError(
-                        null,
-                        throwable.localizedMessage
+                            null,
+                            throwable.localizedMessage
                     )
                 }
             }

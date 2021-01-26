@@ -3,7 +3,7 @@ package com.pratham.project.fileio.data.remote
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.pratham.project.fileio.utils.network.InstagramAnalyzerInterceptor
+import com.pratham.project.fileio.data.utils.InstagramAnalyzerInterceptor
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

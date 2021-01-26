@@ -53,7 +53,7 @@ data class Item(
         @SerializedName("sharing_friction_info") val sharingFrictionInfo: SharingFrictionInfoX? = null,
         @SerializedName("sponsor_tags") val sponsorTags: List<SponsorTag>? = null,
         @SerializedName("taken_at") val takenAt: Int? = null,
-        @SerializedName("user") val user: UserXXXXX? = null,
+        @SerializedName("user") val user: UserXX? = null,
         @SerializedName("usertags") val usertags: Usertags? = null,
         @SerializedName("video_codec") val videoCodec: String? = null,
         @SerializedName("video_dash_manifest") val videoDashManifest: String? = null,

@@ -1,11 +1,12 @@
-package com.pratham.project.fileio.data.remote.models
+package com.pratham.project.fileio.data.local.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.pratham.project.fileio.data.remote.models.FriendshipStatus
 
-@Entity(tableName = "Followers")
-data class UserXX(
+@Entity(tableName = "Followings")
+data class UserXXX(
         @SerializedName("account_badges") val accountBadges: List<String>? = null,
         @SerializedName("friendship_status") val friendshipStatus: FriendshipStatus? = null,
         @SerializedName("full_name") val fullName: String? = null,
