@@ -3,18 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/loginFragment">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/loginFragment"
+        android:name="com.pratham.project.fileio.ui.logins.LoginFragment"
+        android:label="login_fragment"
+        tools:layout="@layout/login_fragment">
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
         android:name="com.pratham.project.fileio.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="HomeFragment"
         tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.pratham.project.fileio.ui.files.FilesFragment"
-        android:label="@string/title_files"
-        tools:layout="@layout/fragment_dashboard" />
 
 </navigation>

@@ -7,4 +7,23 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="view_sep">#979797</color>
+    <color name="view_sep_home">#eeeeee</color>
+    <color name="back_color_valuate_disabled">#b1b1b1</color>
+    <color name="colorSubPrimary">#e79a49</color>
+    <color name="car_conditions_text_color">#8a070707</color>
+    <color name="text_color_light">#da000000</color>
+    <color name="text_color_dark">#de000000</color>
+    <color name="text_color_1">#8a000000</color>
+    <color name="bullet_color">#d8d8d8</color>
+    <color name="color_text_hint">#7d7d7d</color>
+    <color name="text_subtext">#787878</color>
+    <color name="grey_back">#e7e7e7</color>
+    <color name="transparent_background">#00000000</color>
+    <color name="home_tab_text_color_selected">#009588</color>
+    <color name="light_black">#222b45</color>
+    <color name="button_background">#00e096</color>
+    <color name="schedule_text_background">#8f9bb3</color>
+    <color name="transparent">#00000000</color>
 </resources>

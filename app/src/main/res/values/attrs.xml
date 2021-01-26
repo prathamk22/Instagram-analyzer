@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="GlobalAttrs">
+        <attr name="cornerRadius" format="dimension" />
+        <attr name="backColor" format="color" />
+        <attr name="backColorCenter" format="color" />
+        <attr name="backColorEnd" format="color" />
+        <attr name="strokeColor" format="color" />
+        <attr name="showGradient" format="boolean" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="widthScaling" format="boolean" />
+        <attr name="listenKeyboard" format="boolean" />
+        <attr name="imageResId" format="reference" />
+        <attr name="custom_width" format="dimension" />
+        <attr name="custom_height" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MyLinearLayout">
+        <attr name="cornerRadius" />
+        <attr name="showGradient" />
+        <attr name="backColor" />
+        <attr name="backColorCenter" />
+        <attr name="backColorEnd" />
+    </declare-styleable>
+
+    <declare-styleable name="MyRadioButton">
+        <attr name="cornerRadius" />
+        <attr name="backColor" />
+    </declare-styleable>
+
+    <declare-styleable name="MyButton">
+        <attr name="cornerRadius" />
+    </declare-styleable>
+    <declare-styleable name="MyTextView">
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="cornerRadius" />
+        <attr name="showGradient" />
+        <attr name="backColor" />
+        <attr name="backColorCenter" />
+        <attr name="backColorEnd" />
+        <attr name="widthScaling" />
+        <attr name="custom_width" />
+        <attr name="custom_height" />
+    </declare-styleable>
+    <declare-styleable name="MyEditText">
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="cornerRadius" />
+        <attr name="showGradient" />
+        <attr name="backColor" />
+        <attr name="backColorCenter" />
+        <attr name="backColorEnd" />
+        <attr name="widthScaling" />
+    </declare-styleable>
+    <declare-styleable name="MyMotionLayout">
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="cornerRadius" />
+        <attr name="showGradient" />
+        <attr name="backColor" />
+        <attr name="backColorCenter" />
+        <attr name="backColorEnd" />
+        <attr name="widthScaling" />
+        <attr name="listenKeyboard" />
+
+    </declare-styleable>
+    <declare-styleable name="MyConstraintLayout">
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="cornerRadius" />
+        <attr name="showGradient" />
+        <attr name="backColor" />
+        <attr name="backColorCenter" />
+        <attr name="backColorEnd" />
+        <attr name="widthScaling" />
+        <attr name="listenKeyboard" />
+
+    </declare-styleable>
+    <declare-styleable name="MyImageView">
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="cornerRadius" />
+        <attr name="showGradient" />
+        <attr name="backColor" />
+        <attr name="backColorCenter" />
+        <attr name="backColorEnd" />
+        <attr name="widthScaling" />
+        <attr name="imageResId" />
+
+    </declare-styleable>
+    <declare-styleable name="MyRelativeLayout">
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="cornerRadius" />
+        <attr name="showGradient" />
+        <attr name="backColor" />
+        <attr name="backColorCenter" />
+        <attr name="backColorEnd" />
+        <attr name="widthScaling" />
+        <attr name="listenKeyboard" />
+    </declare-styleable>
+</resources>
+

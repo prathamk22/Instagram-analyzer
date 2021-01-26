@@ -1,7 +1,11 @@
 package com.pratham.project.fileio.di
 
+import android.app.Application
 import androidx.room.Room
+import com.pratham.project.fileio.data.PreferenceManager
 import com.pratham.project.fileio.data.local.AppDatabase
+import com.pratham.project.fileio.data.remote.InstagramAPI
+import com.pratham.project.fileio.data.remote.InstagramAPICalls
 import com.pratham.project.fileio.ui.files.FilesRepository
 import com.pratham.project.fileio.ui.files.FilesViewModel
 import com.pratham.project.fileio.ui.home.HomeRepository
@@ -15,21 +19,32 @@ val viewModelModule = module {
     viewModel { FilesViewModel(get()) }
 
     single { FilesRepository() }
-    single { HomeRepository() }
+    single { HomeRepository(get(), get()) }
 }
 
-//val preferencesModule = module {
-//    single { provideSettingsPreferences(androidApplication()) }
-//}
-//
-//fun provideSettingsPreferences(app: Application): PreferenceHelper = PreferenceHelper.getPrefs(app)
+val instagramApiModule = module {
+
+    single { InstagramAPI(androidApplication()) }
+
+    single {
+        val instaApi: InstagramAPI = get()
+        instaApi.api
+    }
+
+}
+
+val preferencesModule = module {
+    single { provideSettingsPreferences(androidApplication()) }
+}
+
+fun provideSettingsPreferences(app: Application): PreferenceManager = PreferenceManager(app)
 
 val databaseModule = module {
 
     single {
         Room.databaseBuilder(
             androidApplication(),
-            AppDatabase::class.java, "files-io-database"
+            AppDatabase::class.java, "instagram-database"
         )
             .fallbackToDestructiveMigration()
             .build()
