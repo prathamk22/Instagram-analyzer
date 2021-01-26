@@ -15,6 +15,7 @@ class PreferenceManager constructor(
         const val USER_NAME = "userName"
         const val FULL_NAME = "fullName"
         const val USER_PROFILE_IMG = "userProfileImg"
+        const val USER_INSTAGRAM_ID = "userProfileId"
     }
 
     private val sharedPrefs: SharedPreferences
@@ -45,6 +46,12 @@ class PreferenceManager constructor(
         get() = sharedPrefs.getString(USER_PROFILE_IMG, "")?:""
         set(value) {
             sharedPrefs.save(USER_PROFILE_IMG, value)
+        }
+
+    var userProfileId: Long
+        get() = sharedPrefs.getLong(USER_INSTAGRAM_ID, 0L)
+        set(value) {
+            sharedPrefs.save(USER_INSTAGRAM_ID, value)
         }
 
 }

@@ -28,11 +28,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.webView.webViewClient = object : WebViewClient() {
-
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-            }
-
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
@@ -50,6 +45,10 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         if(prefsManager.loginCookies.isNullOrEmpty()){
             binding.webView.settings.javaScriptEnabled = true
             binding.webView.loadUrl(INSTAGRAM_URL)
+        }
+
+        binding.userCard.setOnClickListener {
+            getView()?.findNavController()?.navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
         }
     }
 
