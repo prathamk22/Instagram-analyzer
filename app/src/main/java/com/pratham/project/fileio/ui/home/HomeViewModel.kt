@@ -86,9 +86,9 @@ class HomeViewModel(
         }
     }
 
-    private fun getAllFollowers() {
+    private fun getAllFollowers(maxId: String? = null) {
         viewModelScope.launch {
-            when (val response = repo.getAllFollowers()) {
+            when (val response = repo.getAllFollowers(maxId)) {
                 is ResultWrapper.GenericError -> {
                     Log.e("TAG", "getAllFollowers: ${response.error}")
                 }
@@ -96,6 +96,11 @@ class HomeViewModel(
                     if (response.value.isSuccessful) {
                         val userDetails = response.value.body()
                         repo.addFollowersToLocal(userDetails?.users)
+                        if (userDetails?.bigList == true){
+                            getAllFollowers(userDetails.nextMaxId)
+                        }else{
+                            val increaseInFollowers = repo.getDifferenceOfNewFollowers(userDetails?.users)
+                        }
                     } else {
                         Log.e("TAG", "getAllFollowers: ${response.value.message()}")
                     }
@@ -104,7 +109,7 @@ class HomeViewModel(
         }
     }
 
-    private fun getAllFollowings() {
+    private fun getAllFollowings(maxId: String? = null) {
         viewModelScope.launch {
             when (val response = repo.getAllFollowings()) {
                 is ResultWrapper.GenericError -> {
@@ -114,6 +119,11 @@ class HomeViewModel(
                     if (response.value.isSuccessful || response.value.body() != null) {
                         val userDetails = response.value.body()
                         repo.addFollowingsToLocal(userDetails?.users.toLocalUser())
+                        if (userDetails?.bigList == true){
+                            getAllFollowings(userDetails.nextMaxId)
+                        }else{
+
+                        }
                     } else {
                         Log.e("TAG", "getAllFollowings: ${response.value.message()}")
                     }
@@ -148,7 +158,6 @@ class HomeViewModel(
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val userDetails = response.value.body()
-
                         updatePosts(userDetails?.items)
                         updateLikes(userDetails?.items)
                         updateComments(userDetails?.items)

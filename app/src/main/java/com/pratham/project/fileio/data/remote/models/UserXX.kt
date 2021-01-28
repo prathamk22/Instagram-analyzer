@@ -19,5 +19,6 @@ data class UserXX(
         @SerializedName("profile_pic_id") val profilePicId: String? = null,
         @SerializedName("profile_pic_url") val profilePicUrl: String? = null,
         @SerializedName("story_reel_media_ids") val storyReelMediaIds: List<Any>? = null,
-        @SerializedName("username") val username: String? = null
+        @SerializedName("username") val username: String? = null,
+        @SerializedName("connectToUserPk") var connectedToUserPk: Long? = null
 )
