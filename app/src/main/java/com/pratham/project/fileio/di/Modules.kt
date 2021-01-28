@@ -15,7 +15,7 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { HomeViewModel(get(), get()) }
 
-    single { HomeRepository(get(), get(), get(), get(), get()) }
+    single { HomeRepository(get(), get(), get(), get(), get(), get()) }
 }
 
 val instagramApiModule = module {
@@ -59,6 +59,11 @@ val databaseModule = module {
     factory {
         val database: AppDatabase = get()
         database.getFollowingDao()
+    }
+
+    factory {
+        val database: AppDatabase = get()
+        database.getUserLocalDao()
     }
 
 }

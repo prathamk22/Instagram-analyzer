@@ -182,6 +182,13 @@ class HomeViewModel(
                         _userCommentsCount.postValue(userDetails?.items.getCommentsSpannableList())
                         _userLikesCount.postValue(userDetails?.items.getLikesSpannableList())
                         _userPostsCount.postValue(userDetails?.items.getPostsSpannableList())
+                        repo.saveUserVariousCounts(
+                                userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
+                                userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,
+                                userLikesCount = userDetails?.items?.sumBy { it.likeCount ?: 0 } ?: 0,
+                                userCommentsCount = userDetails?.items?.sumBy { it.commentCount ?: 0 } ?: 0,
+                                userPostsCount = userDetails?.items?.size ?: 0
+                        )
                     } else {
                         Log.e("TAG", "getLikesFromFeeds: ${response.value.message()}")
                     }

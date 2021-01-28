@@ -6,6 +6,7 @@ import com.pratham.project.fileio.data.remote.models.FriendshipStatus
 import com.pratham.project.fileio.data.remote.models.UserXX
 import com.pratham.project.fileio.data.utils.jsonToObject
 import com.pratham.project.fileio.data.utils.toJson
+import java.util.*
 
 object DateTypeConverter {
 
@@ -57,6 +58,16 @@ object DateTypeConverter {
     @TypeConverter
     fun toUserXXString(value: UserXXX?): String? {
         return value?.let { value.toJson() }
+    }
+
+    @TypeConverter
+    fun toDate(timestamp: Long?): Date? {
+        return timestamp?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun toTimestamp(date: Date?): Long? {
+        return date?.time
     }
 
 }
