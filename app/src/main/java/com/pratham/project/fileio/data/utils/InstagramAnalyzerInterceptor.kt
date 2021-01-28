@@ -18,7 +18,7 @@ class InstagramAnalyzerInterceptor(val context: Context) : Interceptor {
                 addHeader("accept", "*/*")
                 addHeader("cookie2", "\$Version=1")
                 addHeader("accept-language", "en-US")
-                addHeader("user-agent",  "Instagram 22.0.0.15.68 Android (23/6.0.1; 320dpi; 720x1280; OPPO; CPH1701; CPH1701; qualcommtechnologies,incmsm8940; en_US)")
+                addHeader("user-agent",  "Instagram 22.0.0.15.60 Android (23/6.0.1; 320dpi; 720x1280; OPPO; CPH1702; CPH1702; qualcommtechnologies,incmsm8940; en_US)")
             }.build()
         return chain.proceed(newRequest)
 

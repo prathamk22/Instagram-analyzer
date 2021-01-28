@@ -30,8 +30,7 @@ interface InstagramAPICalls {
     @GET("friendships/{userId}/following/")
     suspend fun getAllFollowings(
             @Path("userId") userId: Long,
-            @Query("rank_token") randToken: String? = null,
-            @Query("ig_sig_key_version") igSigKeyVer: Int = 4
+            @Query("rank_token") randToken: String? = null
     ): Response<FollowersModel>
 
     @GET("feed/liked/")

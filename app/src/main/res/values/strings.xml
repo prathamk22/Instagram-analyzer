@@ -3,4 +3,6 @@
     <string name="title_activity_main2">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_files">Files</string>
+    <string name="followers">Followers</string>
+    <string name="followings">Followings</string>
 </resources>
