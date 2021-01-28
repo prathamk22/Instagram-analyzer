@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.pratham.project.fileio.R
+import com.pratham.project.fileio.data.remote.models.Item
 
 fun SharedPreferences.save(key: String, value: Any) {
     val edit = edit()
@@ -89,6 +90,71 @@ fun getColorFromString(colorHex: String): Int{
     }catch (e: Exception){
         Color.TRANSPARENT
     }
+}
+
+fun List<Item>?.getLikesSpannableList(): MutableList<SpannableModel> {
+    val list = mutableListOf<SpannableModel>()
+    val likesCount = this?.sumBy { it.likeCount ?: 0 } ?: 0
+    list.add(
+            SpannableModel(
+                    "Likes\n",
+                    textColor = R.color.white,
+                    typeFace = "normal",
+                    textSize = R.dimen.sp20
+            )
+    )
+    list.add(
+            SpannableModel(
+                    "$likesCount",
+                    textColor = R.color.white,
+                    typeFace = "bold",
+                    textSize = R.dimen.sp40
+            )
+    )
+    return list
+}
+
+fun List<Item>?.getCommentsSpannableList(): MutableList<SpannableModel> {
+    val list = mutableListOf<SpannableModel>()
+    val commentsCount = this?.sumBy { it.commentCount ?: 0 } ?: 0
+    list.add(
+            SpannableModel(
+                    "Comment\n",
+                    textColor = R.color.white,
+                    typeFace = "normal",
+                    textSize = R.dimen.sp20
+            )
+    )
+    list.add(
+            SpannableModel(
+                    "$commentsCount",
+                    textColor = R.color.white,
+                    typeFace = "bold",
+                    textSize = R.dimen.sp40
+            )
+    )
+    return list
+}
+
+fun List<Item>?.getPostsSpannableList(): MutableList<SpannableModel> {
+    val list = mutableListOf<SpannableModel>()
+    list.add(
+            SpannableModel(
+                    "Posts\n",
+                    textColor = R.color.white,
+                    typeFace = "normal",
+                    textSize = R.dimen.sp20
+            )
+    )
+    list.add(
+            SpannableModel(
+                    "${this?.size ?: 0}",
+                    textColor = R.color.white,
+                    typeFace = "bold",
+                    textSize = R.dimen.sp40
+            )
+    )
+    return list
 }
 
 fun Context.color(colorId: Int): Int{

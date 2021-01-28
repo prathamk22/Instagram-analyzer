@@ -7,7 +7,10 @@ import com.pratham.project.fileio.data.remote.models.UserXX
 @Dao
 interface FollowersDao : BaseDao<UserXX> {
 
-    @Query("SELECT * FROM Followers WHERE connectedToUserPk = :userId")
-    suspend fun getAllFollowers(userId: Long): List<UserXX>
+    @Query("SELECT * FROM Followers")
+    suspend fun getAllFollowers(): List<UserXX>
+
+    @Query("DELETE FROM Followers")
+    suspend fun deleteAll()
 
 }

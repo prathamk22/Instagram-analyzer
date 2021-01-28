@@ -31,7 +31,8 @@ interface InstagramAPICalls {
     @GET("friendships/{userId}/following/")
     suspend fun getAllFollowings(
             @Path("userId") userId: Long,
-            @Query("rank_token") randToken: String? = null
+            @Query("rank_token") randToken: String? = null,
+            @Query("max_id") maxId: String? = null
     ): Response<FollowersModel>
 
     @GET("feed/liked/")

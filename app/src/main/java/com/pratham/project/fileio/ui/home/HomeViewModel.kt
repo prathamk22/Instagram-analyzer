@@ -6,12 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.pratham.project.fileio.R
 import com.pratham.project.fileio.data.PreferenceManager
+import com.pratham.project.fileio.data.local.models.FollowersDifferenceModel
 import com.pratham.project.fileio.data.remote.models.Item
+import com.pratham.project.fileio.data.remote.models.UserXX
 import com.pratham.project.fileio.data.remote.models.UsernameInfo
 import com.pratham.project.fileio.utils.base.BaseViewModel
 import com.pratham.project.fileio.data.utils.ResultWrapper
-import com.pratham.project.fileio.data.utils.toLocalUser
+import com.pratham.project.fileio.data.utils.toUserXXX
 import com.pratham.project.fileio.utils.SpannableModel
+import com.pratham.project.fileio.utils.getCommentsSpannableList
+import com.pratham.project.fileio.utils.getLikesSpannableList
+import com.pratham.project.fileio.utils.getPostsSpannableList
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -34,6 +39,14 @@ class HomeViewModel(
     val userCommentsCount: LiveData<List<SpannableModel>>
         get() = _userCommentsCount
     private val _userCommentsCount = MutableLiveData<List<SpannableModel>>()
+
+    val userFollowersDifference: LiveData<FollowersDifferenceModel>
+        get() = _userFollowersDifference
+    private val _userFollowersDifference = MutableLiveData<FollowersDifferenceModel>()
+
+    val userFollowingsDifference: LiveData<FollowersDifferenceModel>
+        get() = _userFollowingsDifference
+    private val _userFollowingsDifference = MutableLiveData<FollowersDifferenceModel>()
 
     init {
         getUsernameDetails()
@@ -86,7 +99,7 @@ class HomeViewModel(
         }
     }
 
-    private fun getAllFollowers(maxId: String? = null) {
+    private fun getAllFollowers(maxId: String? = null, previousList: List<UserXX>? = emptyList()) {
         viewModelScope.launch {
             when (val response = repo.getAllFollowers(maxId)) {
                 is ResultWrapper.GenericError -> {
@@ -95,11 +108,15 @@ class HomeViewModel(
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val userDetails = response.value.body()
-                        repo.addFollowersToLocal(userDetails?.users)
-                        if (userDetails?.bigList == true){
-                            getAllFollowers(userDetails.nextMaxId)
-                        }else{
-                            val increaseInFollowers = repo.getDifferenceOfNewFollowers(userDetails?.users)
+                        if (userDetails?.bigList == true) {
+                            getAllFollowers(userDetails.nextMaxId, userDetails.users)
+                        } else {
+                            val newList = userDetails?.users?.toMutableList()
+                            newList?.addAll(previousList ?: emptyList())
+                            val increaseInFollowers = repo.getDifferenceOfNewFollowers(newList)
+                            repo.dropAllFollowers()
+                            repo.addFollowersToLocal(newList)
+                            _userFollowersDifference.postValue(increaseInFollowers)
                         }
                     } else {
                         Log.e("TAG", "getAllFollowers: ${response.value.message()}")
@@ -109,20 +126,24 @@ class HomeViewModel(
         }
     }
 
-    private fun getAllFollowings(maxId: String? = null) {
+    private fun getAllFollowings(maxId: String? = null, previousList: List<UserXX>? = emptyList()) {
         viewModelScope.launch {
-            when (val response = repo.getAllFollowings()) {
+            when (val response = repo.getAllFollowings(maxId)) {
                 is ResultWrapper.GenericError -> {
                     Log.e("TAG", "getAllFollowings: ${response.error}")
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful || response.value.body() != null) {
                         val userDetails = response.value.body()
-                        repo.addFollowingsToLocal(userDetails?.users.toLocalUser())
                         if (userDetails?.bigList == true){
-                            getAllFollowings(userDetails.nextMaxId)
+                            getAllFollowings(userDetails.nextMaxId, userDetails.users)
                         }else{
-
+                            val newList = userDetails?.users?.toMutableList()
+                            newList?.addAll(previousList ?: emptyList())
+                            val increaseInFollowings = repo.getDifferenceOfNewFollowings(newList)
+                            repo.dropAllFollowings()
+                            repo.addFollowingsToLocal(newList.toUserXXX())
+                            _userFollowingsDifference.postValue(increaseInFollowings)
                         }
                     } else {
                         Log.e("TAG", "getAllFollowings: ${response.value.message()}")
@@ -158,80 +179,15 @@ class HomeViewModel(
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val userDetails = response.value.body()
-                        updatePosts(userDetails?.items)
-                        updateLikes(userDetails?.items)
-                        updateComments(userDetails?.items)
+                        _userCommentsCount.postValue(userDetails?.items.getCommentsSpannableList())
+                        _userLikesCount.postValue(userDetails?.items.getLikesSpannableList())
+                        _userPostsCount.postValue(userDetails?.items.getPostsSpannableList())
                     } else {
                         Log.e("TAG", "getLikesFromFeeds: ${response.value.message()}")
                     }
                 }
             }
         }
-    }
-
-    private fun updatePosts(itemList: List<Item>?){
-        val list = mutableListOf<SpannableModel>()
-        list.add(
-                SpannableModel(
-                        "Posts\n",
-                        textColor = R.color.white,
-                        typeFace = "normal",
-                        textSize = R.dimen.sp20
-                )
-        )
-        list.add(
-                SpannableModel(
-                        "${itemList?.size ?: 0}",
-                        textColor = R.color.white,
-                        typeFace = "bold",
-                        textSize = R.dimen.sp40
-                )
-        )
-        _userPostsCount.postValue(list)
-    }
-
-    private fun updateLikes(itemList: List<Item>?){
-        val list = mutableListOf<SpannableModel>()
-        val likesCount = itemList?.sumBy { it.likeCount ?: 0 } ?: 0
-        list.add(
-                SpannableModel(
-                        "Likes\n",
-                        textColor = R.color.white,
-                        typeFace = "normal",
-                        textSize = R.dimen.sp20
-                )
-        )
-        list.add(
-                SpannableModel(
-                        "$likesCount",
-                        textColor = R.color.white,
-                        typeFace = "bold",
-                        textSize = R.dimen.sp40
-                )
-        )
-        _userLikesCount.postValue(list)
-    }
-
-    private fun updateComments(itemList: List<Item>?){
-        val list = mutableListOf<SpannableModel>()
-        val commentsCount = itemList?.sumBy { it.commentCount ?: 0 } ?: 0
-        list.add(
-                SpannableModel(
-                        "Comment\n",
-                        textColor = R.color.white,
-                        typeFace = "normal",
-                        textSize = R.dimen.sp20
-                )
-        )
-        list.add(
-                SpannableModel(
-                        "$commentsCount",
-                        textColor = R.color.white,
-                        typeFace = "bold",
-                        textSize = R.dimen.sp40
-                )
-        )
-        _userCommentsCount.postValue(list)
     }
 
 }

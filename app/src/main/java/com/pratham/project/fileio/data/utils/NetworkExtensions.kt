@@ -36,12 +36,35 @@ fun User?.toLocalModel(sharedPreferences: PreferenceManager): UsernameEntity? {
     )
 }
 
-fun List<UserXX>?.toLocalUser(): List<UserXXX>?{
+fun List<UserXX>?.toUserXXX(): List<UserXXX>?{
     if (isNullOrEmpty())
         return null
 
     return map {
         UserXXX(
+                accountBadges = it.accountBadges,
+                friendshipStatus = it.friendshipStatus,
+                fullName = it.fullName,
+                hasAnonymousProfilePicture = it.hasAnonymousProfilePicture,
+                isFavorite = it.isFavorite,
+                isPrivate = it.isPrivate,
+                isUnpublished = it.isUnpublished,
+                isVerified = it.isVerified,
+                pk = it.pk,
+                profilePicId = it.profilePicId,
+                profilePicUrl = it.profilePicUrl,
+                storyReelMediaIds = it.storyReelMediaIds,
+                username = it.username
+        )
+    }
+}
+
+fun List<UserXXX>?.toUserXX(): List<UserXX>?{
+    if (isNullOrEmpty())
+        return null
+
+    return map {
+        UserXX(
                 accountBadges = it.accountBadges,
                 friendshipStatus = it.friendshipStatus,
                 fullName = it.fullName,
