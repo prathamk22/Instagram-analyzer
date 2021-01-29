@@ -6,8 +6,8 @@ import java.util.*
 
 @Entity
 data class UserLocalCountsEntity(
-        val userLikesCount: Int,
-        val userCommentsCount: Int,
+        val userTotalLikesCount: Int,
+        val userTotalCommentsCount: Int,
         val userFollowesCount: Int,
         val userFollowingsCount: Int,
         val userPostsCount: Int,

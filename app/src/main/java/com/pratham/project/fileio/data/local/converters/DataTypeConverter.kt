@@ -1,8 +1,12 @@
 package com.pratham.project.fileio.data.local.converters
 
 import androidx.room.TypeConverter
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.pratham.project.fileio.data.local.models.UserXXX
+import com.pratham.project.fileio.data.remote.models.Caption
 import com.pratham.project.fileio.data.remote.models.FriendshipStatus
+import com.pratham.project.fileio.data.remote.models.Location
 import com.pratham.project.fileio.data.remote.models.UserXX
 import com.pratham.project.fileio.data.utils.jsonToObject
 import com.pratham.project.fileio.data.utils.toJson
@@ -41,8 +45,29 @@ object DateTypeConverter {
     }
 
     @TypeConverter
+    fun toListInt(value: String?): List<Int>? {
+        return value?.let { value.jsonToObject<List<Int>>() }
+    }
+
+    @TypeConverter
+    fun toListInt(value: List<Int>?): String? {
+        return value?.let { value.toJson() }
+    }
+
+    @TypeConverter
+    fun toListLong(value: String?): List<Long>? {
+        return value?.let { value.jsonToObject<List<Long>>() }
+    }
+
+    @TypeConverter
+    fun toListLong(value: List<Long>?): String? {
+        return value?.let { value.toJson() }
+    }
+
+    @TypeConverter
     fun toUserXXString(value: String?): UserXX? {
-        return value?.let { value.jsonToObject<UserXX>() }
+        val type = object : TypeToken<UserXX>(){}.type
+        return Gson().fromJson(value, type)
     }
 
     @TypeConverter
@@ -61,6 +86,27 @@ object DateTypeConverter {
     }
 
     @TypeConverter
+    fun toCaptionString(value: String?): Caption? {
+        return value?.let { value.jsonToObject<Caption>() }
+    }
+
+    @TypeConverter
+    fun toCaptionString(value: Caption?): String? {
+        return value?.let { value.toJson() }
+    }
+
+    @TypeConverter
+    fun toLocationString(value: String?): Location? {
+        val type = object : TypeToken<Location>(){}.type
+        return Gson().fromJson(value, type)
+    }
+
+    @TypeConverter
+    fun toLocationString(value: Location?): String? {
+        return value?.let { value.toJson() }
+    }
+
+    @TypeConverter
     fun toDate(timestamp: Long?): Date? {
         return timestamp?.let { Date(it) }
     }
@@ -69,5 +115,4 @@ object DateTypeConverter {
     fun toTimestamp(date: Date?): Long? {
         return date?.time
     }
-
 }

@@ -3,8 +3,10 @@ package com.pratham.project.fileio.data.utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.pratham.project.fileio.data.PreferenceManager
+import com.pratham.project.fileio.data.local.models.FeedsEntity
 import com.pratham.project.fileio.data.local.models.UserXXX
 import com.pratham.project.fileio.data.local.models.UsernameEntity
+import com.pratham.project.fileio.data.remote.models.Item
 import com.pratham.project.fileio.data.remote.models.User
 import com.pratham.project.fileio.data.remote.models.UserXX
 
@@ -78,6 +80,33 @@ fun List<UserXXX>?.toUserXX(): List<UserXX>?{
                 profilePicUrl = it.profilePicUrl,
                 storyReelMediaIds = it.storyReelMediaIds,
                 username = it.username
+        )
+    }
+}
+
+fun List<Item>?.toLocalUserFeed(): List<FeedsEntity>?{
+    if (this.isNullOrEmpty()){
+        return null
+    }
+
+    return map {
+        FeedsEntity(
+            id = it.id ?: "",
+            carouselMediaCount = it.carouselMediaCount,
+            code = it.code,
+            commentCount = it.commentCount,
+            likeCount = it.likeCount,
+            deviceTimeStamp = it.deviceTimestamp,
+            hasAudio = it.hasAudio,
+            hasLiked = it.hasLiked,
+            location = it.location,
+            mediaType = it.mediaType,
+            nextMaxId = it.nextMaxId,
+            pk = it.pk,
+            userPk = it.user?.pk,
+            takenAt = it.takenAt,
+            user = it.user,
+            viewCount = it.viewCount
         )
     }
 }

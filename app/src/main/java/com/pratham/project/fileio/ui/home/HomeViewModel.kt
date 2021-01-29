@@ -3,11 +3,13 @@ package com.pratham.project.fileio.ui.home
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
-import com.pratham.project.fileio.R
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.data.Entry
 import com.pratham.project.fileio.data.PreferenceManager
+import com.pratham.project.fileio.data.local.models.FeedsEntity
 import com.pratham.project.fileio.data.local.models.FollowersDifferenceModel
-import com.pratham.project.fileio.data.remote.models.Item
 import com.pratham.project.fileio.data.remote.models.UserXX
 import com.pratham.project.fileio.data.remote.models.UsernameInfo
 import com.pratham.project.fileio.utils.base.BaseViewModel
@@ -17,11 +19,13 @@ import com.pratham.project.fileio.utils.SpannableModel
 import com.pratham.project.fileio.utils.getCommentsSpannableList
 import com.pratham.project.fileio.utils.getLikesSpannableList
 import com.pratham.project.fileio.utils.getPostsSpannableList
+import com.pratham.project.fileio.utils.widgits.CustomGraphView
 import kotlinx.coroutines.launch
+import java.util.*
 
 class HomeViewModel(
-        private val repo: HomeRepository,
-        private val prefsManager: PreferenceManager
+    private val repo: HomeRepository,
+    private val prefsManager: PreferenceManager
 ) : BaseViewModel() {
 
     val userDetails: LiveData<UsernameInfo>
@@ -48,8 +52,35 @@ class HomeViewModel(
         get() = _userFollowingsDifference
     private val _userFollowingsDifference = MutableLiveData<FollowersDifferenceModel>()
 
+    val likesPointMapLD: LiveData<CustomGraphView.GraphDataModel>
+        get() = _likesPointMapLD
+    private val _likesPointMapLD = MutableLiveData<CustomGraphView.GraphDataModel>()
+
+    private val userCountsObserver = Observer<List<FeedsEntity>> {
+        val likesEntryList = mutableListOf<Entry>()
+        val commentsEntryList = mutableListOf<Entry>()
+        if (it.isNullOrEmpty()){
+            return@Observer
+        }
+        it.forEachIndexed { index, feed ->
+            val calender = Calendar.getInstance()
+            calender.time = Date(feed.deviceTimeStamp ?: 0L)
+
+            likesEntryList.add(Entry(index.toFloat(), feed.likeCount?.toFloat() ?: 0f))
+            commentsEntryList.add(Entry(index.toFloat(), feed.commentCount?.toFloat() ?: 0f))
+        }
+
+        val pointMap = CustomGraphView.GraphDataModel(
+            Description().apply { text = "" },
+            likesEntryList,
+            commentsEntryList
+        )
+        _likesPointMapLD.postValue(pointMap)
+    }
+
     init {
         getUsernameDetails()
+        repo.getUserPosts().observeForever(userCountsObserver)
     }
 
     private fun getUsernameDetails() {
@@ -135,9 +166,9 @@ class HomeViewModel(
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful || response.value.body() != null) {
                         val userDetails = response.value.body()
-                        if (userDetails?.bigList == true){
+                        if (userDetails?.bigList == true) {
                             getAllFollowings(userDetails.nextMaxId, userDetails.users)
-                        }else{
+                        } else {
                             val newList = userDetails?.users?.toMutableList()
                             newList?.addAll(previousList ?: emptyList())
                             val increaseInFollowings = repo.getDifferenceOfNewFollowings(newList)
@@ -182,12 +213,14 @@ class HomeViewModel(
                         _userCommentsCount.postValue(userDetails?.items.getCommentsSpannableList())
                         _userLikesCount.postValue(userDetails?.items.getLikesSpannableList())
                         _userPostsCount.postValue(userDetails?.items.getPostsSpannableList())
+                        repo.addUserFeedToLocal(userDetails?.items)
                         repo.saveUserVariousCounts(
-                                userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
-                                userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,
-                                userLikesCount = userDetails?.items?.sumBy { it.likeCount ?: 0 } ?: 0,
-                                userCommentsCount = userDetails?.items?.sumBy { it.commentCount ?: 0 } ?: 0,
-                                userPostsCount = userDetails?.items?.size ?: 0
+                            userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
+                            userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,
+                            userLikesCount = userDetails?.items?.sumBy { it.likeCount ?: 0 } ?: 0,
+                            userCommentsCount = userDetails?.items?.sumBy { it.commentCount ?: 0 }
+                                ?: 0,
+                            userPostsCount = userDetails?.items?.size ?: 0
                         )
                     } else {
                         Log.e("TAG", "getLikesFromFeeds: ${response.value.message()}")

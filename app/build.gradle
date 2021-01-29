@@ -65,6 +65,8 @@ dependencies {
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     //MISC
     implementation 'com.airbnb.android:lottie:3.4.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'

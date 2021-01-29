@@ -92,6 +92,7 @@
             layout="@layout/follower_layout" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/postsHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp20"
@@ -143,6 +144,15 @@
                 tools:text="Comment\n 20"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.pratham.project.fileio.utils.widgits.CustomGraphView
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="@dimen/dp20"
+            app:graphData="@{vm.likesPointMapLD}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/postsHolder"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
