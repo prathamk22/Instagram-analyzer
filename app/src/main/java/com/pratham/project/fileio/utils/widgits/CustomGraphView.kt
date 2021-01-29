@@ -3,6 +3,7 @@ package com.pratham.project.fileio.utils.widgits
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
@@ -68,6 +69,8 @@ class CustomGraphView(context: Context, arrts: AttributeSet) : LineChart(context
         lineData.setValueTextSize(15f)
         lineData.setValueTextColor(Color.BLACK)
         data = lineData
+
+        animateX(500, Easing.EaseInCubic)
         invalidate()
     }
 

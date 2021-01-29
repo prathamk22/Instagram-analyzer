@@ -43,7 +43,7 @@ interface InstagramAPICalls {
     @GET("feed/user/{userId}/")
     suspend fun getUserFeed(
             @Path("userId") userId: Long,
-            @Query("max_id") maxId: Long? = null,
+            @Query("max_id") maxId: String? = null,
             @Query("min_timestamp") minTimestamp: Long? = null,
             @Query("rank_token") randToken: String? = null,
             @Query("ranked_content") rankedContent: Boolean? = true,

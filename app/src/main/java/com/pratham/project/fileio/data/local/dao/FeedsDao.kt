@@ -8,7 +8,7 @@ import com.pratham.project.fileio.data.local.models.FeedsEntity
 @Dao
 interface FeedsDao : BaseDao<FeedsEntity> {
 
-    @Query("SELECT * FROM FeedsEntity WHERE userPk = :userPk ORDER BY takenAt ASC")
+    @Query("SELECT * FROM FeedsEntity WHERE userPk = :userPk ORDER BY takenAt DESC LIMIT 20")
     fun getUserPosts(userPk: Long): LiveData<List<FeedsEntity>>
 
 }

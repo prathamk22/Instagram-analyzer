@@ -18,7 +18,7 @@ data class FeedsEntity(
         val hasLiked: Boolean?,
         val location: Location?,
         val mediaType: Int?,
-        val nextMaxId: Long?,
+        val nextMaxId: String?,
         val pk: Long?,
         val userPk: Long?,
         val takenAt: Int?,

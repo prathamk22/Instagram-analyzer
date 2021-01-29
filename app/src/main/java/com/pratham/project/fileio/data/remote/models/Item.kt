@@ -1,6 +1,5 @@
 package com.pratham.project.fileio.data.remote.models
 
-
 import com.google.gson.annotations.SerializedName
 
 data class Item(
@@ -39,7 +38,7 @@ data class Item(
         @SerializedName("location") val location: Location? = null,
         @SerializedName("max_num_visible_preview_comments") val maxNumVisiblePreviewComments: Int? = null,
         @SerializedName("media_type") val mediaType: Int? = null,
-        @SerializedName("next_max_id") val nextMaxId: Long? = null,
+        @SerializedName("next_max_id") val nextMaxId: String? = null,
         @SerializedName("number_of_qualities") val numberOfQualities: Int? = null,
         @SerializedName("organic_tracking_token") val organicTrackingToken: String? = null,
         @SerializedName("original_height") val originalHeight: Int? = null,

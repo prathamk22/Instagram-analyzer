@@ -10,6 +10,7 @@ import com.github.mikephil.charting.data.Entry
 import com.pratham.project.fileio.data.PreferenceManager
 import com.pratham.project.fileio.data.local.models.FeedsEntity
 import com.pratham.project.fileio.data.local.models.FollowersDifferenceModel
+import com.pratham.project.fileio.data.remote.models.Item
 import com.pratham.project.fileio.data.remote.models.UserXX
 import com.pratham.project.fileio.data.remote.models.UsernameInfo
 import com.pratham.project.fileio.utils.base.BaseViewModel
@@ -62,7 +63,7 @@ class HomeViewModel(
         if (it.isNullOrEmpty()){
             return@Observer
         }
-        it.forEachIndexed { index, feed ->
+        it.reversed().forEachIndexed { index, feed ->
             val calender = Calendar.getInstance()
             calender.time = Date(feed.deviceTimeStamp ?: 0L)
 
@@ -201,29 +202,34 @@ class HomeViewModel(
         }
     }
 
-    private fun getUserFeed() {
+    private fun getUserFeed(maxId: String? = null, previousList: List<Item>? = null) {
         viewModelScope.launch {
-            when (val response = repo.getUserFeeds()) {
+            when (val response = repo.getUserFeeds(maxId)) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getLikesFromFeeds: ${response.error}")
+                    Log.e("TAG", "getUserFeed: ${response.error}")
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val userDetails = response.value.body()
-                        _userCommentsCount.postValue(userDetails?.items.getCommentsSpannableList())
-                        _userLikesCount.postValue(userDetails?.items.getLikesSpannableList())
-                        _userPostsCount.postValue(userDetails?.items.getPostsSpannableList())
-                        repo.addUserFeedToLocal(userDetails?.items)
-                        repo.saveUserVariousCounts(
-                            userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
-                            userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,
-                            userLikesCount = userDetails?.items?.sumBy { it.likeCount ?: 0 } ?: 0,
-                            userCommentsCount = userDetails?.items?.sumBy { it.commentCount ?: 0 }
-                                ?: 0,
-                            userPostsCount = userDetails?.items?.size ?: 0
-                        )
+
+                        if (userDetails?.moreAvailable == true){
+                            getUserFeed(userDetails.nextMaxId, userDetails.items)
+                        }else{
+                            val allUserPosts = (userDetails?.items ?: emptyList()) + (previousList ?:  emptyList())
+                            _userCommentsCount.postValue(allUserPosts.getCommentsSpannableList())
+                            _userLikesCount.postValue(allUserPosts.getLikesSpannableList())
+                            _userPostsCount.postValue(allUserPosts.getPostsSpannableList())
+                            repo.addUserFeedToLocal(allUserPosts)
+                            repo.saveUserVariousCounts(
+                                    userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
+                                    userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,
+                                    userLikesCount = allUserPosts.sumBy { it.likeCount ?: 0 },
+                                    userCommentsCount = allUserPosts.sumBy { it.commentCount ?: 0 },
+                                    userPostsCount = allUserPosts.size
+                            )
+                        }
                     } else {
-                        Log.e("TAG", "getLikesFromFeeds: ${response.value.message()}")
+                        Log.e("TAG", "getUserFeed: ${response.value.message()}")
                     }
                 }
             }

@@ -91,7 +91,7 @@ fun List<Item>?.toLocalUserFeed(): List<FeedsEntity>?{
 
     return map {
         FeedsEntity(
-            id = it.id ?: "",
+            id = it.id.toString(),
             carouselMediaCount = it.carouselMediaCount,
             code = it.code,
             commentCount = it.commentCount,

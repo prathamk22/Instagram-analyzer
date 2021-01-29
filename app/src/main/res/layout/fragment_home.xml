@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.home.HomeFragment">
 
     <data>
 
@@ -9,151 +12,154 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:padding="@dimen/dp20"
-        tools:context=".ui.home.HomeFragment">
-
-        <com.pratham.project.fileio.utils.widgits.MyImageView
-            android:id="@+id/usernamePic"
-            android:layout_width="@dimen/dp100"
-            android:layout_height="@dimen/dp100"
-            android:layout_marginTop="@dimen/dp10"
-            app:cornerRadius="25dp"
-            app:imageUrl="@{vm.userDetails.user.profilePicUrl}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.pratham.project.fileio.utils.widgits.MyTextView
-            android:id="@+id/username"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp10"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{vm.userDetails.user.username}"
-            android:textColor="@color/orange"
-            android:textSize="@dimen/sp30"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/userFullName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/usernamePic"
-            app:layout_constraintTop_toTopOf="@id/usernamePic"
-            tools:text="prxthxm15" />
-
-        <com.pratham.project.fileio.utils.widgits.MyTextView
-            android:id="@+id/userFullName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp10"
-            android:layout_marginTop="@dimen/dp10"
-            android:text="@{vm.userDetails.user.fullName}"
-            android:textColor="@color/dark_grey"
-            android:textSize="@dimen/sp18"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/usernamePic"
-            app:layout_constraintTop_toBottomOf="@id/username"
-            tools:text="Pratham Khurana" />
-
-        <include
-            android:id="@+id/followersHolder"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp20"
-            android:layout_marginEnd="5dp"
-            app:layout_constraintEnd_toStartOf="@id/followingsHolder"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/usernamePic"
-            app:title="@{@string/followers}"
-            app:count="@{vm.userDetails.user.followerCount}"
-            app:increaseNumber="@{vm.userFollowersDifference.increaseDifference}"
-            app:decreaseNumber="@{vm.userFollowersDifference.decreaseDifference}"
-            app:backgroundGradient="@{@drawable/followers_gradient}"
-            layout="@layout/follower_layout" />
-
-        <include
-            android:id="@+id/followingsHolder"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp20"
-            android:layout_marginStart="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/followersHolder"
-            app:layout_constraintTop_toBottomOf="@id/usernamePic"
-            app:backgroundGradient="@{@drawable/followings_gradient}"
-            app:title="@{@string/followings}"
-            app:count="@{vm.userDetails.user.followingCount}"
-            app:increaseNumber="@{vm.userFollowingsDifference.increaseDifference}"
-            app:decreaseNumber="@{vm.userFollowingsDifference.decreaseDifference}"
-            layout="@layout/follower_layout" />
+        android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/postsHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp20"
-            android:padding="@dimen/dp20"
-            android:background="@drawable/posts_gradient"
-            app:layout_constraintTop_toBottomOf="@id/followersHolder">
+            android:padding="@dimen/dp20">
 
-            <com.pratham.project.fileio.utils.widgits.MyTextView
-                android:id="@+id/postsCount"
-                android:layout_width="0dp"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textSize="@dimen/text_size_24sp"
-                android:layout_height="wrap_content"
-                app:texts="@{vm.userPostsCount}"
-                app:layout_constraintTop_toTopOf="parent"
+            <com.pratham.project.fileio.utils.widgits.MyImageView
+                android:id="@+id/usernamePic"
+                android:layout_width="@dimen/dp100"
+                android:layout_height="@dimen/dp100"
+                android:layout_marginTop="@dimen/dp10"
+                app:cornerRadius="25dp"
+                app:imageUrl="@{vm.userDetails.user.profilePicUrl}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/likesCount"
-                tools:text="Posts\n 20"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.pratham.project.fileio.utils.widgits.MyTextView
-                android:id="@+id/likesCount"
+                android:id="@+id/username"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:layout_marginStart="@dimen/dp10"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{vm.userDetails.user.username}"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/sp30"
                 android:textStyle="bold"
-                android:gravity="center"
-                android:textSize="@dimen/text_size_24sp"
-                app:texts="@{vm.userLikesCount}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/postsCount"
-                app:layout_constraintEnd_toStartOf="@id/commentsCount"
-                tools:text="Likes\n 20"/>
-
-            <com.pratham.project.fileio.utils.widgits.MyTextView
-                android:id="@+id/commentsCount"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textSize="@dimen/text_size_24sp"
-                app:texts="@{vm.userCommentsCount}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/likesCount"
+                app:layout_constraintBottom_toTopOf="@id/userFullName"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Comment\n 20"/>
+                app:layout_constraintStart_toEndOf="@id/usernamePic"
+                app:layout_constraintTop_toTopOf="@id/usernamePic"
+                tools:text="prxthxm15" />
+
+            <com.pratham.project.fileio.utils.widgits.MyTextView
+                android:id="@+id/userFullName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:text="@{vm.userDetails.user.fullName}"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/sp18"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/usernamePic"
+                app:layout_constraintTop_toBottomOf="@id/username"
+                tools:text="Pratham Khurana" />
+
+            <include
+                android:id="@+id/followersHolder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp20"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintEnd_toStartOf="@id/followingsHolder"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/usernamePic"
+                app:title="@{@string/followers}"
+                app:count="@{vm.userDetails.user.followerCount}"
+                app:increaseNumber="@{vm.userFollowersDifference.increaseDifference}"
+                app:decreaseNumber="@{vm.userFollowersDifference.decreaseDifference}"
+                app:backgroundGradient="@{@drawable/followers_gradient}"
+                layout="@layout/follower_layout" />
+
+            <include
+                android:id="@+id/followingsHolder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp20"
+                android:layout_marginStart="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/followersHolder"
+                app:layout_constraintTop_toBottomOf="@id/usernamePic"
+                app:backgroundGradient="@{@drawable/followings_gradient}"
+                app:title="@{@string/followings}"
+                app:count="@{vm.userDetails.user.followingCount}"
+                app:increaseNumber="@{vm.userFollowingsDifference.increaseDifference}"
+                app:decreaseNumber="@{vm.userFollowingsDifference.decreaseDifference}"
+                layout="@layout/follower_layout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/postsHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp20"
+                android:padding="@dimen/dp20"
+                android:background="@drawable/posts_gradient"
+                app:layout_constraintTop_toBottomOf="@id/followersHolder">
+
+                <com.pratham.project.fileio.utils.widgits.MyTextView
+                    android:id="@+id/postsCount"
+                    android:layout_width="0dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_24sp"
+                    android:layout_height="wrap_content"
+                    app:texts="@{vm.userPostsCount}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/likesCount"
+                    tools:text="Posts\n 20"/>
+
+                <com.pratham.project.fileio.utils.widgits.MyTextView
+                    android:id="@+id/likesCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_24sp"
+                    app:texts="@{vm.userLikesCount}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/postsCount"
+                    app:layout_constraintEnd_toStartOf="@id/commentsCount"
+                    tools:text="Likes\n 20"/>
+
+                <com.pratham.project.fileio.utils.widgits.MyTextView
+                    android:id="@+id/commentsCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:textSize="@dimen/text_size_24sp"
+                    app:texts="@{vm.userCommentsCount}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/likesCount"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="Comment\n 20"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.pratham.project.fileio.utils.widgits.CustomGraphView
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="@dimen/dp20"
+                app:graphData="@{vm.likesPointMapLD}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/postsHolder"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.pratham.project.fileio.utils.widgits.CustomGraphView
-            android:layout_width="0dp"
-            android:layout_height="250dp"
-            android:layout_marginTop="@dimen/dp20"
-            app:graphData="@{vm.likesPointMapLD}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/postsHolder"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </layout>

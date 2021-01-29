@@ -46,8 +46,8 @@ class HomeRepository(
 
     suspend fun getLikesFromFeeds() = safeApiCall { instagramAPICalls.getLikesFromFeeds() }
 
-    suspend fun getUserFeeds() =
-        safeApiCall { instagramAPICalls.getUserFeed(prefsManager.userProfileId) }
+    suspend fun getUserFeeds(maxId: String?) =
+        safeApiCall { instagramAPICalls.getUserFeed(prefsManager.userProfileId, maxId) }
 
     fun getUserPosts() = feedsDao.getUserPosts(prefsManager.userProfileId)
 
