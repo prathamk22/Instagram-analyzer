@@ -10,6 +10,9 @@ import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -170,5 +173,18 @@ fun Activity?.hideSoftKeyboard() {
     if (currentFocus != null) {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+    }
+}
+
+fun <ItemType, DataBinding : ViewDataBinding> GenericAdapter<ItemType, DataBinding>.observeList(
+        listLiveData: LiveData<List<ItemType>>,
+        lifecycleOwner: LifecycleOwner,
+        beforeSubmittingList: () -> Unit = {},
+        afterSubmittingList: () -> Unit = {}
+) {
+    listLiveData.observe(lifecycleOwner) {
+        beforeSubmittingList.invoke()
+        submitList(it)
+        afterSubmittingList.invoke()
     }
 }

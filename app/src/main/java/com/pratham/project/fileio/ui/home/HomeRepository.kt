@@ -2,31 +2,27 @@ package com.pratham.project.fileio.ui.home
 
 import com.pratham.project.fileio.data.PreferenceManager
 import com.pratham.project.fileio.data.local.dao.*
-import com.pratham.project.fileio.data.local.models.FollowersDifferenceModel
-import com.pratham.project.fileio.data.local.models.UserLocalCountsEntity
-import com.pratham.project.fileio.data.local.models.UserXXX
+import com.pratham.project.fileio.data.local.models.*
 import com.pratham.project.fileio.data.remote.InstagramAPICalls
-import com.pratham.project.fileio.data.remote.models.Item
-import com.pratham.project.fileio.data.remote.models.User
-import com.pratham.project.fileio.data.remote.models.UserXX
+import com.pratham.project.fileio.data.remote.models.*
 import com.pratham.project.fileio.data.utils.safeApiCall
 import com.pratham.project.fileio.data.utils.toLocalModel
 import com.pratham.project.fileio.data.utils.toLocalUserFeed
 import com.pratham.project.fileio.data.utils.toUserXX
 import java.util.*
+import kotlin.collections.HashMap
 
 class HomeRepository(
-    private val instagramAPICalls: InstagramAPICalls,
-    private val prefsManager: PreferenceManager,
-    private val usernameDao: UsernameDao,
-    private val followersDao: FollowersDao,
-    private val followingsDao: FollowingsDao,
-    private val userLocalCountsDao: UserLocalCountsDao,
-    private val feedsDao: FeedsDao
+        private val instagramAPICalls: InstagramAPICalls,
+        private val prefsManager: PreferenceManager,
+        private val usernameDao: UsernameDao,
+        private val followersDao: FollowersDao,
+        private val followingsDao: FollowingsDao,
+        private val userLocalCountsDao: UserLocalCountsDao,
+        private val feedsDao: FeedsDao
 ) {
 
-    suspend fun getUserDetails() =
-        safeApiCall { instagramAPICalls.getUserDetails(prefsManager.userName) }
+    suspend fun getUserDetails() = safeApiCall { instagramAPICalls.getUserDetails(prefsManager.userName) }
 
     suspend fun allowUserDetails() = safeApiCall { instagramAPICalls.allowUserEdit() }
 
@@ -34,22 +30,24 @@ class HomeRepository(
 
     suspend fun dropAllFollowings() = followingsDao.deleteAll()
 
+    suspend fun dropAllFeeds() = feedsDao.deleteAll()
+
     suspend fun getAllFollowers(maxId: String?) =
-        safeApiCall { instagramAPICalls.getAllFollowers(prefsManager.userProfileId, maxId = maxId) }
+            safeApiCall { instagramAPICalls.getAllFollowers(prefsManager.userProfileId, maxId = maxId) }
 
     suspend fun getAllFollowings(maxId: String?) = safeApiCall {
         instagramAPICalls.getAllFollowings(
-            prefsManager.userProfileId,
-            maxId = maxId
+                prefsManager.userProfileId,
+                maxId = maxId
         )
     }
 
-    suspend fun getLikesFromFeeds() = safeApiCall { instagramAPICalls.getLikesFromFeeds() }
+    suspend fun getLikesFromFeeds(maxId: String?) = safeApiCall { instagramAPICalls.getLikesFromFeeds(maxId) }
 
     suspend fun getUserFeeds(maxId: String?) =
-        safeApiCall { instagramAPICalls.getUserFeed(prefsManager.userProfileId, maxId) }
+            safeApiCall { instagramAPICalls.getUserFeed(prefsManager.userProfileId, maxId) }
 
-    fun getUserPosts() = feedsDao.getUserPosts(prefsManager.userProfileId)
+    fun getUserPosts() = feedsDao.getUserPostsLD(prefsManager.userProfileId)
 
     suspend fun addFollowersToLocal(followersList: List<UserXX>?) {
         followersList?.forEach { it.connectedToUserPk = prefsManager.userProfileId }
@@ -64,7 +62,7 @@ class HomeRepository(
         userItem.toLocalModel(prefsManager)?.let { usernameDao.insert(it) }
     }
 
-    suspend fun addUserFeedToLocal(items: List<Item>?){
+    suspend fun addUserFeedToLocal(items: List<Item>?) {
         items.toLocalUserFeed()?.let { feedsDao.insertAll(it) }
     }
 
@@ -94,10 +92,10 @@ class HomeRepository(
         }
 
         return FollowersDifferenceModel(
-            increaseDifference = newlyAdded.size,
-            decreaseDifference = newlyRemoved.size,
-            increaseDiffList = newlyAdded,
-            decreaseDiffList = newlyRemoved
+                increaseDifference = newlyAdded.size,
+                decreaseDifference = newlyRemoved.size,
+                increaseDiffList = newlyAdded,
+                decreaseDiffList = newlyRemoved
         )
     }
 
@@ -126,31 +124,31 @@ class HomeRepository(
             }
         }
         return FollowersDifferenceModel(
-            increaseDifference = newlyAdded.size,
-            decreaseDifference = newlyRemoved.size,
-            increaseDiffList = newlyAdded,
-            decreaseDiffList = newlyRemoved
+                increaseDifference = newlyAdded.size,
+                decreaseDifference = newlyRemoved.size,
+                increaseDiffList = newlyAdded,
+                decreaseDiffList = newlyRemoved
         )
     }
 
     suspend fun saveUserVariousCounts(
-        userLikesCount: Int,
-        userCommentsCount: Int,
-        userFollowesCount: Int,
-        userFollowingsCount: Int,
-        userPostsCount: Int
+            userLikesCount: Int,
+            userCommentsCount: Int,
+            userFollowesCount: Int,
+            userFollowingsCount: Int,
+            userPostsCount: Int
     ) {
         val latestCounts = userLocalCountsDao.getLatestAddedCounts()
 
         if (latestCounts == null) {
             userLocalCountsDao.insert(
-                UserLocalCountsEntity(
-                    userLikesCount,
-                    userCommentsCount,
-                    userFollowesCount,
-                    userFollowingsCount,
-                    userPostsCount
-                )
+                    UserLocalCountsEntity(
+                            userLikesCount,
+                            userCommentsCount,
+                            userFollowesCount,
+                            userFollowingsCount,
+                            userPostsCount
+                    )
             )
             return
         }
@@ -165,14 +163,53 @@ class HomeRepository(
             userLocalCountsDao.delete(latestCounts)
         }
         userLocalCountsDao.insert(
-            UserLocalCountsEntity(
-                userLikesCount,
-                userCommentsCount,
-                userFollowesCount,
-                userFollowingsCount,
-                userPostsCount
-            )
+                UserLocalCountsEntity(
+                        userLikesCount,
+                        userCommentsCount,
+                        userFollowesCount,
+                        userFollowingsCount,
+                        userPostsCount
+                )
         )
+    }
+
+    suspend fun analyzeHastags(): List<HashtagsCountModel> {
+        val userPosts = feedsDao.getUserPosts(prefsManager.userProfileId)
+        val map: HashMap<String, Int> = HashMap()
+
+        val userCaptionsLists = userPosts.map { it.caption }
+        userCaptionsLists.forEach { caption ->
+            val hashtags = Regex("(#+[a-zA-Z0-9(_)]+)").findAll(caption?.text ?: "")
+            hashtags.forEach {
+                if (map.containsKey(it.value)) {
+                    val hashtagCount = map[it.value] ?: 0 + 1
+                    map[it.value] = hashtagCount
+                } else {
+                    map[it.value] = 1
+                }
+            }
+        }
+
+        return map.map { HashtagsCountModel(it.key, it.value) }
+    }
+
+    suspend fun analyzeLocations(): List<LocationCountModel> {
+        val userPosts = feedsDao.getUserPosts(prefsManager.userProfileId)
+        val map: HashMap<Location, Int> = HashMap()
+
+        val userLocationsLists = userPosts.map { it.location }
+        userLocationsLists.forEach { location ->
+            if (location != null) {
+                if (map.containsKey(location)) {
+                    val locationCount = map[location] ?: 1
+                    map[location] = locationCount + 1
+                } else {
+                    map[location] = 1
+                }
+            }
+        }
+
+        return map.map { LocationCountModel(it.key, it.value) }
     }
 
 }

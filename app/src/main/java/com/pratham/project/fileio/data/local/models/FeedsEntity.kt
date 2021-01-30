@@ -10,6 +10,7 @@ import com.pratham.project.fileio.data.remote.models.UserXX
 data class FeedsEntity(
         @PrimaryKey val id: String,
         val carouselMediaCount: Int?,
+        val caption: Caption?,
         val code: String?,
         val commentCount: Int?,
         val likeCount: Int?,

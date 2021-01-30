@@ -150,13 +150,28 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.pratham.project.fileio.utils.widgits.CustomGraphView
+                android:id="@+id/likesGrpahView"
                 android:layout_width="0dp"
-                android:layout_height="250dp"
+                android:layout_height="@dimen/dp250"
                 android:layout_marginTop="@dimen/dp20"
                 app:graphData="@{vm.likesPointMapLD}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/postsHolder"/>
+
+            <com.pratham.project.fileio.utils.widgits.MyRecyclerView
+                android:id="@+id/hashTagsRv"
+                android:layout_marginTop="@dimen/dp20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/likesGrpahView"/>
+
+            <com.pratham.project.fileio.utils.widgits.MyRecyclerView
+                android:id="@+id/locationRv"
+                android:layout_marginTop="@dimen/dp20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/hashTagsRv"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

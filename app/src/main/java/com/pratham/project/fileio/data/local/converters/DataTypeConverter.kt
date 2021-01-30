@@ -86,16 +86,6 @@ object DateTypeConverter {
     }
 
     @TypeConverter
-    fun toCaptionString(value: String?): Caption? {
-        return value?.let { value.jsonToObject<Caption>() }
-    }
-
-    @TypeConverter
-    fun toCaptionString(value: Caption?): String? {
-        return value?.let { value.toJson() }
-    }
-
-    @TypeConverter
     fun toLocationString(value: String?): Location? {
         val type = object : TypeToken<Location>(){}.type
         return Gson().fromJson(value, type)
@@ -103,6 +93,17 @@ object DateTypeConverter {
 
     @TypeConverter
     fun toLocationString(value: Location?): String? {
+        return value?.let { value.toJson() }
+    }
+
+    @TypeConverter
+    fun toCaptionString(value: String?): Caption? {
+        val type = object : TypeToken<Caption>(){}.type
+        return Gson().fromJson(value, type)
+    }
+
+    @TypeConverter
+    fun toCaptionString(value: Caption?): String? {
         return value?.let { value.toJson() }
     }
 

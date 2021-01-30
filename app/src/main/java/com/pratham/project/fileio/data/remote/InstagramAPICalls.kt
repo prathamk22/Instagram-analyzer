@@ -37,7 +37,7 @@ interface InstagramAPICalls {
 
     @GET("feed/liked/")
     suspend fun getLikesFromFeeds(
-            @Query("max_id") maxId: Long? = null
+            @Query("max_id") maxId: String? = null
     ): Response<LikesModel>
 
     @GET("feed/user/{userId}/")

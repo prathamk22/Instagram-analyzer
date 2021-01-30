@@ -9,6 +9,12 @@ import com.pratham.project.fileio.data.local.models.FeedsEntity
 interface FeedsDao : BaseDao<FeedsEntity> {
 
     @Query("SELECT * FROM FeedsEntity WHERE userPk = :userPk ORDER BY takenAt DESC LIMIT 20")
-    fun getUserPosts(userPk: Long): LiveData<List<FeedsEntity>>
+    fun getUserPostsLD(userPk: Long): LiveData<List<FeedsEntity>>
+
+    @Query("SELECT * FROM FeedsEntity WHERE userPk = :userPk")
+    suspend fun getUserPosts(userPk: Long): List<FeedsEntity>
+
+    @Query("DELETE FROM FeedsEntity")
+    suspend fun deleteAll()
 
 }

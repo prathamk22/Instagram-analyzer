@@ -14,7 +14,7 @@ fun User?.toLocalModel(sharedPreferences: PreferenceManager): UsernameEntity? {
     if (this == null) {
         return null
     }
-    
+
     return UsernameEntity(
             userId = pk,
             name = fullName,
@@ -38,7 +38,7 @@ fun User?.toLocalModel(sharedPreferences: PreferenceManager): UsernameEntity? {
     )
 }
 
-fun List<UserXX>?.toUserXXX(): List<UserXXX>?{
+fun List<UserXX>?.toUserXXX(): List<UserXXX>? {
     if (isNullOrEmpty())
         return null
 
@@ -61,7 +61,7 @@ fun List<UserXX>?.toUserXXX(): List<UserXXX>?{
     }
 }
 
-fun List<UserXXX>?.toUserXX(): List<UserXX>?{
+fun List<UserXXX>?.toUserXX(): List<UserXX>? {
     if (isNullOrEmpty())
         return null
 
@@ -84,38 +84,39 @@ fun List<UserXXX>?.toUserXX(): List<UserXX>?{
     }
 }
 
-fun List<Item>?.toLocalUserFeed(): List<FeedsEntity>?{
-    if (this.isNullOrEmpty()){
+fun List<Item>?.toLocalUserFeed(): List<FeedsEntity>? {
+    if (this.isNullOrEmpty()) {
         return null
     }
 
     return map {
         FeedsEntity(
-            id = it.id.toString(),
-            carouselMediaCount = it.carouselMediaCount,
-            code = it.code,
-            commentCount = it.commentCount,
-            likeCount = it.likeCount,
-            deviceTimeStamp = it.deviceTimestamp,
-            hasAudio = it.hasAudio,
-            hasLiked = it.hasLiked,
-            location = it.location,
-            mediaType = it.mediaType,
-            nextMaxId = it.nextMaxId,
-            pk = it.pk,
-            userPk = it.user?.pk,
-            takenAt = it.takenAt,
-            user = it.user,
-            viewCount = it.viewCount
+                id = it.id.toString(),
+                carouselMediaCount = it.carouselMediaCount,
+                caption = it.caption,
+                code = it.code,
+                commentCount = it.commentCount,
+                likeCount = it.likeCount,
+                deviceTimeStamp = it.deviceTimestamp,
+                hasAudio = it.hasAudio,
+                hasLiked = it.hasLiked,
+                location = it.location,
+                mediaType = it.mediaType,
+                nextMaxId = it.nextMaxId,
+                pk = it.pk,
+                userPk = it.user?.pk,
+                takenAt = it.takenAt,
+                user = it.user,
+                viewCount = it.viewCount
         )
     }
 }
 
-fun Any?.toJson(): String{
+fun Any?.toJson(): String {
     return Gson().toJson(this)
 }
 
-fun <T> String?.jsonToObject(): T{
-    val type = object : TypeToken<T>(){}.type
+fun <T> String?.jsonToObject(): T {
+    val type = object : TypeToken<T>() {}.type
     return Gson().fromJson(this, type)
 }

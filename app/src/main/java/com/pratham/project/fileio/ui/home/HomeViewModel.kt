@@ -4,12 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.pratham.project.fileio.data.PreferenceManager
 import com.pratham.project.fileio.data.local.models.FeedsEntity
 import com.pratham.project.fileio.data.local.models.FollowersDifferenceModel
+import com.pratham.project.fileio.data.local.models.HashtagsCountModel
+import com.pratham.project.fileio.data.local.models.LocationCountModel
 import com.pratham.project.fileio.data.remote.models.Item
 import com.pratham.project.fileio.data.remote.models.UserXX
 import com.pratham.project.fileio.data.remote.models.UsernameInfo
@@ -57,10 +58,23 @@ class HomeViewModel(
         get() = _likesPointMapLD
     private val _likesPointMapLD = MutableLiveData<CustomGraphView.GraphDataModel>()
 
+    val hashtagsListLD: LiveData<List<HashtagsCountModel>>
+        get() = _hashtagsLD
+    private val _hashtagsLD = MutableLiveData<List<HashtagsCountModel>>()
+
+    val locationListLD: LiveData<List<LocationCountModel>>
+        get() = _locationList
+    private val _locationList = MutableLiveData<List<LocationCountModel>>()
+
     private val userCountsObserver = Observer<List<FeedsEntity>> {
         val likesEntryList = mutableListOf<Entry>()
         val commentsEntryList = mutableListOf<Entry>()
         if (it.isNullOrEmpty()){
+            _likesPointMapLD.postValue(CustomGraphView.GraphDataModel(
+                    Description().apply { text = "" },
+                    emptyList(),
+                    emptyList()
+            ))
             return@Observer
         }
         it.reversed().forEachIndexed { index, feed ->
@@ -85,20 +99,21 @@ class HomeViewModel(
     }
 
     private fun getUsernameDetails() {
-        viewModelScope.launch {
+        backgroundThread.launch {
             when (val response = repo.allowUserDetails()) {
                 is ResultWrapper.GenericError -> {
                     Log.e("TAG", "getUserDetails: ${response.error}")
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
-                        val userDetails = response.value.body()
-                        with(userDetails?.user) {
+                        val responseValue = response.value.body()
+                        with(responseValue?.user) {
                             this?.fullName?.let { prefsManager.fullName = it }
                             this?.username?.let { prefsManager.userName = it }
                             this?.profilePicUrl?.let { prefsManager.userProfileImg = it }
                             this?.pk?.let { prefsManager.userProfileId = it }
                         }
+                        repo.dropAllFeeds()
                         refreshUserDetails()
                     } else {
                         Log.e("TAG", "getUserDetails: ${response.value.message()}")
@@ -109,18 +124,17 @@ class HomeViewModel(
     }
 
     private fun refreshUserDetails() {
-        viewModelScope.launch {
+        backgroundThread.launch {
             when (val response = repo.getUserDetails()) {
                 is ResultWrapper.GenericError -> {
                     Log.e("TAG", "getUserDetails: ${response.error}")
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
-                        val userDetails = response.value.body()
-                        repo.addUserToLocal(userDetails?.user)
+                        val responseValue = response.value.body()
+                        repo.addUserToLocal(responseValue?.user)
                         getAllFollowers()
                         getAllFollowings()
-                        getLikesFromFeeds()
                         getUserFeed()
                         _userDetails.postValue(response.value.body())
                     } else {
@@ -132,18 +146,18 @@ class HomeViewModel(
     }
 
     private fun getAllFollowers(maxId: String? = null, previousList: List<UserXX>? = emptyList()) {
-        viewModelScope.launch {
+        backgroundThread.launch {
             when (val response = repo.getAllFollowers(maxId)) {
                 is ResultWrapper.GenericError -> {
                     Log.e("TAG", "getAllFollowers: ${response.error}")
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
-                        val userDetails = response.value.body()
-                        if (userDetails?.bigList == true) {
-                            getAllFollowers(userDetails.nextMaxId, userDetails.users)
+                        val responseValue = response.value.body()
+                        if (responseValue?.bigList == true) {
+                            getAllFollowers(responseValue.nextMaxId, responseValue.users)
                         } else {
-                            val newList = userDetails?.users?.toMutableList()
+                            val newList = responseValue?.users?.toMutableList()
                             newList?.addAll(previousList ?: emptyList())
                             val increaseInFollowers = repo.getDifferenceOfNewFollowers(newList)
                             repo.dropAllFollowers()
@@ -159,18 +173,18 @@ class HomeViewModel(
     }
 
     private fun getAllFollowings(maxId: String? = null, previousList: List<UserXX>? = emptyList()) {
-        viewModelScope.launch {
+        backgroundThread.launch {
             when (val response = repo.getAllFollowings(maxId)) {
                 is ResultWrapper.GenericError -> {
                     Log.e("TAG", "getAllFollowings: ${response.error}")
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful || response.value.body() != null) {
-                        val userDetails = response.value.body()
-                        if (userDetails?.bigList == true) {
-                            getAllFollowings(userDetails.nextMaxId, userDetails.users)
+                        val responseValue = response.value.body()
+                        if (responseValue?.bigList == true) {
+                            getAllFollowings(responseValue.nextMaxId, responseValue.users)
                         } else {
-                            val newList = userDetails?.users?.toMutableList()
+                            val newList = responseValue?.users?.toMutableList()
                             newList?.addAll(previousList ?: emptyList())
                             val increaseInFollowings = repo.getDifferenceOfNewFollowings(newList)
                             repo.dropAllFollowings()
@@ -185,41 +199,25 @@ class HomeViewModel(
         }
     }
 
-    private fun getLikesFromFeeds() {
-        viewModelScope.launch {
-            when (val response = repo.getLikesFromFeeds()) {
-                is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getLikesFromFeeds: ${response.error}")
-                }
-                is ResultWrapper.Success -> {
-                    if (response.value.isSuccessful) {
-                        val userDetails = response.value.body()
-                    } else {
-                        Log.e("TAG", "getLikesFromFeeds: ${response.value.message()}")
-                    }
-                }
-            }
-        }
-    }
-
     private fun getUserFeed(maxId: String? = null, previousList: List<Item>? = null) {
-        viewModelScope.launch {
+        backgroundThread.launch {
             when (val response = repo.getUserFeeds(maxId)) {
                 is ResultWrapper.GenericError -> {
                     Log.e("TAG", "getUserFeed: ${response.error}")
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
-                        val userDetails = response.value.body()
-
-                        if (userDetails?.moreAvailable == true){
-                            getUserFeed(userDetails.nextMaxId, userDetails.items)
+                        val responseValue = response.value.body()
+                        if (responseValue?.moreAvailable == true){
+                            getUserFeed(responseValue.nextMaxId, responseValue.items)
                         }else{
-                            val allUserPosts = (userDetails?.items ?: emptyList()) + (previousList ?:  emptyList())
+                            val allUserPosts = (responseValue?.items ?: emptyList()) + (previousList ?:  emptyList())
+                            repo.addUserFeedToLocal(allUserPosts)
                             _userCommentsCount.postValue(allUserPosts.getCommentsSpannableList())
                             _userLikesCount.postValue(allUserPosts.getLikesSpannableList())
                             _userPostsCount.postValue(allUserPosts.getPostsSpannableList())
-                            repo.addUserFeedToLocal(allUserPosts)
+                            _hashtagsLD.postValue(repo.analyzeHastags())
+                            _locationList.postValue(repo.analyzeLocations())
                             repo.saveUserVariousCounts(
                                     userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
                                     userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,

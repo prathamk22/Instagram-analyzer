@@ -15,7 +15,7 @@ import com.pratham.project.fileio.data.remote.models.UserXX
         entities = [UsernameEntity::class, UserXX::class, UserXXX::class, FeedsEntity::class,
             UserLocalCountsEntity::class],
         exportSchema = true,
-        version = 13
+        version = 14
 )
 @TypeConverters(DateTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
