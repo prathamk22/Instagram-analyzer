@@ -3,10 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.pratham.project.fileio.utils.widgits.MyConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/dp120"
         android:layout_height="@dimen/dp100"
-        android:layout_marginEnd="@dimen/dp5"
-        android:layout_marginBottom="@dimen/dp5"
         android:background="@color/white"
         android:elevation="4dp"
         app:cornerRadius="@dimen/dp15">
@@ -25,7 +23,7 @@
 
         <com.pratham.project.fileio.utils.widgits.MyTextView
             android:id="@+id/locationText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="#fcaf45"
             android:ellipsize="end"

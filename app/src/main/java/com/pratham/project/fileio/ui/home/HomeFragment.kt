@@ -3,6 +3,7 @@ package com.pratham.project.fileio.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.google.android.flexbox.*
 import com.pratham.project.fileio.R
@@ -12,6 +13,7 @@ import com.pratham.project.fileio.databinding.FragmentHomeBinding
 import com.pratham.project.fileio.databinding.HashtagsItemBinding
 import com.pratham.project.fileio.databinding.LocationItemBinding
 import com.pratham.project.fileio.utils.GenericAdapter
+import com.pratham.project.fileio.utils.LocationsMarginDecoration
 import com.pratham.project.fileio.utils.base.BaseFragment
 import com.pratham.project.fileio.utils.observeList
 import com.pratham.project.fileio.utils.toDp
@@ -52,9 +54,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.locationRv.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = locationsAdapter
+            addItemDecoration(LocationsMarginDecoration())
         }
 
-        val snapHelper = PagerSnapHelper()
+        val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.locationRv)
 
         hashtagsAdapter.observeList(vm.hashtagsListLD, viewLifecycleOwner)
