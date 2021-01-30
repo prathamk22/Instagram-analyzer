@@ -22,19 +22,6 @@ class InstagramAPI(val context: Context) {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    fun setHttpLogging(enabled: Boolean) {
-        logging.level =
-            if (enabled)
-                HttpLoggingInterceptor.Level.BODY
-            else
-                HttpLoggingInterceptor.Level.NONE
-    }
-
-    fun getHttpLogging(): Boolean = when (logging.level) {
-        HttpLoggingInterceptor.Level.BODY -> true
-        else -> false
-    }
-
     private val clientInterceptor = OkHttpClient.Builder()
         .connectTimeout(CONNECT_TIMEOUT.toLong(), TimeUnit.SECONDS)
         .readTimeout(READ_TIMEOUT.toLong(), TimeUnit.SECONDS)

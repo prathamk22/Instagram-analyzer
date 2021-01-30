@@ -36,7 +36,7 @@ suspend fun <T> safeApiCall(
                 else -> {
                     ResultWrapper.GenericError(
                             null,
-                            throwable.localizedMessage
+                            throwable.localizedMessage ?: ""
                     )
                 }
             }

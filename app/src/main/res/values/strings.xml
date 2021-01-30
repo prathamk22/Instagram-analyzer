@@ -5,4 +5,5 @@
     <string name="title_files">Files</string>
     <string name="followers">Followers</string>
     <string name="followings">Followings</string>
+    <string name="view_all">View All</string>
 </resources>

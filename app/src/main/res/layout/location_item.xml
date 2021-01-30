@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <com.pratham.project.fileio.utils.widgits.MyConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp100"
+        android:layout_marginEnd="@dimen/dp5"
+        android:layout_marginBottom="@dimen/dp5"
+        android:background="@color/white"
+        android:elevation="4dp"
+        app:cornerRadius="@dimen/dp15">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.pratham.project.fileio.utils.widgits.MyTextView
+            android:id="@+id/postCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/locationText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.pratham.project.fileio.utils.widgits.MyTextView
+            android:id="@+id/locationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#fcaf45"
+            android:ellipsize="end"
+            android:maxLength="15"
+            android:maxLines="1"
+            android:paddingStart="@dimen/dp10"
+            android:paddingTop="@dimen/dp15"
+            android:paddingEnd="@dimen/dp10"
+            android:paddingBottom="@dimen/dp15"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp13"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </com.pratham.project.fileio.utils.widgits.MyConstraintLayout>
 </layout>

@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.pratham.project.fileio.utils.widgits.MyTextView
+        android:id="@+id/hashtagText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp10"
+        android:textColor="#c13584"
+        android:textSize="14sp"
+        android:layout_marginTop="@dimen/dp10"
+        android:layout_marginStart="@dimen/dp10"
+        android:textStyle="bold"
+        app:cornerRadius="60dp"
+        app:strokeColor="#c13584"
+        app:strokeWidth="1dp"
+        tools:text="#Pratham Khurana" />
 
 </layout>

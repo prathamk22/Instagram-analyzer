@@ -22,6 +22,11 @@ class HomeRepository(
         private val feedsDao: FeedsDao
 ) {
 
+    companion object{
+        const val HASHTAGS_SIZE = 6
+        const val LOCATIONS_SIZE = 6
+    }
+
     suspend fun getUserDetails() = safeApiCall { instagramAPICalls.getUserDetails(prefsManager.userName) }
 
     suspend fun allowUserDetails() = safeApiCall { instagramAPICalls.allowUserEdit() }
@@ -190,7 +195,7 @@ class HomeRepository(
             }
         }
 
-        return map.map { HashtagsCountModel(it.key, it.value) }
+        return map.map { HashtagsCountModel(it.key, it.value) }.subList(0, if (map.size > HASHTAGS_SIZE) HASHTAGS_SIZE else map.size)
     }
 
     suspend fun analyzeLocations(): List<LocationCountModel> {
@@ -209,7 +214,7 @@ class HomeRepository(
             }
         }
 
-        return map.map { LocationCountModel(it.key, it.value) }
+        return map.map { LocationCountModel(it.key, it.value) }.subList(0, if (map.size > LOCATIONS_SIZE) LOCATIONS_SIZE else map.size)
     }
 
 }

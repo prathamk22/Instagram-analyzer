@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -179,12 +180,16 @@ fun Activity?.hideSoftKeyboard() {
 fun <ItemType, DataBinding : ViewDataBinding> GenericAdapter<ItemType, DataBinding>.observeList(
         listLiveData: LiveData<List<ItemType>>,
         lifecycleOwner: LifecycleOwner,
-        beforeSubmittingList: () -> Unit = {},
-        afterSubmittingList: () -> Unit = {}
+        beforeSubmittingList: (list: List<ItemType>) -> Unit = {},
+        afterSubmittingList: (list: List<ItemType>) -> Unit = {}
 ) {
     listLiveData.observe(lifecycleOwner) {
-        beforeSubmittingList.invoke()
+        beforeSubmittingList.invoke(it)
         submitList(it)
-        afterSubmittingList.invoke()
+        afterSubmittingList.invoke(it)
     }
 }
+
+fun Int.toDp(displayMetrics: DisplayMetrics) = toFloat().toDp(displayMetrics).toInt()
+
+fun Float.toDp(displayMetrics: DisplayMetrics) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, displayMetrics)

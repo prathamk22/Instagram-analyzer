@@ -30,6 +30,10 @@ class HomeViewModel(
     private val prefsManager: PreferenceManager
 ) : BaseViewModel() {
 
+    val loadingDone: LiveData<Boolean>
+        get() = _loadingDone
+    private val _loadingDone = MutableLiveData<Boolean>()
+
     val userDetails: LiveData<UsernameInfo>
         get() = _userDetails
     private val _userDetails = MutableLiveData<UsernameInfo>()
@@ -218,6 +222,7 @@ class HomeViewModel(
                             _userPostsCount.postValue(allUserPosts.getPostsSpannableList())
                             _hashtagsLD.postValue(repo.analyzeHastags())
                             _locationList.postValue(repo.analyzeLocations())
+                            _loadingDone.postValue(true)
                             repo.saveUserVariousCounts(
                                     userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
                                     userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,
