@@ -1,22 +1,22 @@
 package com.pratham.project.fileio.ui.logins
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.*
-import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import com.pratham.project.fileio.R
 import com.pratham.project.fileio.data.PreferenceManager
 import com.pratham.project.fileio.utils.INSTAGRAM_URL
 import com.pratham.project.fileio.utils.base.BaseFragment
 import com.pratham.project.fileio.databinding.LoginFragmentBinding
-import org.koin.android.ext.android.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment) {
 
-    private val prefsManager: PreferenceManager by inject()
+    @Inject lateinit var prefsManager: PreferenceManager
 
     var loaded = 0
 
