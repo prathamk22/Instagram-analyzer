@@ -1,9 +1,12 @@
 package com.pratham.project.fileio.ui.home
 
 import android.util.Log
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.pratham.project.fileio.data.PreferenceManager
@@ -25,9 +28,12 @@ import com.pratham.project.fileio.utils.widgits.CustomGraphView
 import kotlinx.coroutines.launch
 import java.util.*
 
-class HomeViewModel(
-    private val repo: HomeRepository,
-    private val prefsManager: PreferenceManager
+class HomeViewModel
+@ViewModelInject
+constructor(
+    private val repo: HomeRepositoryImpl,
+    private val prefsManager: PreferenceManager,
+    @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     val loadingDone: LiveData<Boolean>

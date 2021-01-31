@@ -2,9 +2,9 @@ package com.pratham.project.fileio.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.PagerSnapHelper
 import com.google.android.flexbox.*
 import com.pratham.project.fileio.R
 import com.pratham.project.fileio.data.local.models.HashtagsCountModel
@@ -17,11 +17,12 @@ import com.pratham.project.fileio.utils.LocationsMarginDecoration
 import com.pratham.project.fileio.utils.base.BaseFragment
 import com.pratham.project.fileio.utils.observeList
 import com.pratham.project.fileio.utils.toDp
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
-    private val vm: HomeViewModel by stateViewModel()
+    private val vm: HomeViewModel by viewModels()
     private val hashtagsAdapter = object : GenericAdapter<HashtagsCountModel, HashtagsItemBinding>(R.layout.hashtags_item){
         override fun onBind(item: HashtagsCountModel, adapterItemBinding: HashtagsItemBinding) {
             adapterItemBinding.hashtagText.text = item.hashtag

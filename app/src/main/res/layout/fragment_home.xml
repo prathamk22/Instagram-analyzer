@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp20"
                     app:layout_constraintTop_toBottomOf="@id/likesGrpahView"
-                    app:title="@{`Most Used Hashtags`}" />
+                    app:sectionTitle="@{`Most Used Hashtags`}" />
 
                 <com.pratham.project.fileio.utils.widgits.MyRecyclerView
                     android:id="@+id/hashTagsRv"
@@ -193,7 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp10"
                     app:layout_constraintTop_toBottomOf="@id/hashTagsRv"
-                    app:title="@{`Locations`}" />
+                    app:sectionTitle="@{`Locations`}" />
 
                 <com.pratham.project.fileio.utils.widgits.MyRecyclerView
                     android:id="@+id/locationRv"
