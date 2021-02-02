@@ -217,4 +217,13 @@ class HomeRepositoryImpl(
         return map.map { LocationCountModel(it.key, it.value) }.subList(0, if (map.size > LOCATIONS_SIZE) LOCATIONS_SIZE else map.size)
     }
 
+    override fun saveUserDetailsToLocal(user: User?) {
+        with(user) {
+            this?.fullName?.let { prefsManager.fullName = it }
+            this?.username?.let { prefsManager.userName = it }
+            this?.profilePicUrl?.let { prefsManager.userProfileImg = it }
+            this?.pk?.let { prefsManager.userProfileId = it }
+        }
+    }
+
 }

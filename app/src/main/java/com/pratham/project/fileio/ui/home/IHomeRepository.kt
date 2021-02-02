@@ -51,4 +51,6 @@ interface IHomeRepository {
     suspend fun analyzeHastags(): List<HashtagsCountModel>
 
     suspend fun analyzeLocations(): List<LocationCountModel>
+
+    fun saveUserDetailsToLocal(user: User?)
 }

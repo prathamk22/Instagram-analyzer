@@ -31,9 +31,8 @@ import java.util.*
 class HomeViewModel
 @ViewModelInject
 constructor(
-    private val repo: HomeRepositoryImpl,
-    private val prefsManager: PreferenceManager,
-    @Assisted private val savedStateHandle: SavedStateHandle
+    private val repo: IHomeRepository,
+    @Assisted private val savedStateHandle: SavedStateHandle?
 ) : BaseViewModel() {
 
     val loadingDone: LiveData<Boolean>
@@ -104,11 +103,11 @@ constructor(
     }
 
     init {
-        getUsernameDetails()
-        repo.getUserPosts().observeForever(userCountsObserver)
+//        getUsernameDetails()
+//        repo.getUserPosts().observeForever(userCountsObserver)
     }
 
-    private fun getUsernameDetails() {
+    fun getUsernameDetails() {
         backgroundThread.launch {
             when (val response = repo.allowUserDetails()) {
                 is ResultWrapper.GenericError -> {
@@ -117,12 +116,7 @@ constructor(
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val responseValue = response.value.body()
-                        with(responseValue?.user) {
-                            this?.fullName?.let { prefsManager.fullName = it }
-                            this?.username?.let { prefsManager.userName = it }
-                            this?.profilePicUrl?.let { prefsManager.userProfileImg = it }
-                            this?.pk?.let { prefsManager.userProfileId = it }
-                        }
+                        repo.saveUserDetailsToLocal(responseValue?.user)
                         repo.dropAllFeeds()
                         refreshUserDetails()
                     } else {
