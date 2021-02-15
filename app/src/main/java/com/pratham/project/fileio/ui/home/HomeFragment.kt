@@ -21,6 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
+    //Testing
     private val vm: HomeViewModel by stateViewModel()
     private val hashtagsAdapter = object : GenericAdapter<HashtagsCountModel, HashtagsItemBinding>(R.layout.hashtags_item){
         override fun onBind(item: HashtagsCountModel, adapterItemBinding: HashtagsItemBinding) {
