@@ -6,26 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
-import com.google.android.material.transition.MaterialSharedAxis
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.pratham.project.fileio.R
 
-abstract class BaseFragment<DataBinding : ViewDataBinding>(private val layoutRes: Int) : Fragment(){
+abstract class BaseBottomSheetDialogFragment<DataBinding : ViewDataBinding>(private val layoutRes: Int): BottomSheetDialogFragment() {
 
     protected lateinit var binding: DataBinding
     protected var TAG: String = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
-            duration = resources.getInteger(R.integer.large_animation).toLong()
-        }
-        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
-            duration = resources.getInteger(R.integer.large_animation).toLong()
-        }
-        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
-            duration = resources.getInteger(R.integer.large_animation).toLong()
-        }
+        setStyle(STYLE_NO_FRAME, R.style.CustomBottomSheetDialogTheme)
+        getArgs()
     }
 
     override fun onCreateView(
@@ -40,4 +32,5 @@ abstract class BaseFragment<DataBinding : ViewDataBinding>(private val layoutRes
 
     protected abstract fun setBindings(binding: DataBinding)
 
+    abstract fun getArgs()
 }

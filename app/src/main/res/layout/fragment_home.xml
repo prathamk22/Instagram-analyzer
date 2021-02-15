@@ -176,6 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp20"
+                    android:visibility="@{vm.hashtagsListLD.size() == 0 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toBottomOf="@id/likesGrpahView"
                     app:sectionTitle="@{`Most Used Hashtags`}" />
 
@@ -192,6 +193,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp10"
+                    android:visibility="@{vm.locationListLD.size() == 0 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toBottomOf="@id/hashTagsRv"
                     app:sectionTitle="@{`Locations`}" />
 

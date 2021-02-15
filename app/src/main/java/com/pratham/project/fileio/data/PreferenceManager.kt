@@ -56,4 +56,8 @@ class PreferenceManager @Inject constructor(
             sharedPrefs.save(USER_INSTAGRAM_ID, value)
         }
 
+    fun logOut(){
+        sharedPrefs.edit().clear().apply()
+    }
+
 }

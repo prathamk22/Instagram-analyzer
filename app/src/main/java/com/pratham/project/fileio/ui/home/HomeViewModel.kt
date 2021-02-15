@@ -1,6 +1,5 @@
 package com.pratham.project.fileio.ui.home
 
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -14,6 +13,7 @@ import com.pratham.project.fileio.data.local.models.FeedsEntity
 import com.pratham.project.fileio.data.local.models.FollowersDifferenceModel
 import com.pratham.project.fileio.data.local.models.HashtagsCountModel
 import com.pratham.project.fileio.data.local.models.LocationCountModel
+import com.pratham.project.fileio.data.remote.models.ErrorModel
 import com.pratham.project.fileio.data.remote.models.Item
 import com.pratham.project.fileio.data.remote.models.UserXX
 import com.pratham.project.fileio.data.remote.models.UsernameInfo
@@ -76,6 +76,10 @@ constructor(
         get() = _locationList
     private val _locationList = MutableLiveData<List<LocationCountModel>>()
 
+    val errorModelLD: LiveData<ErrorModel>
+        get() = _errorModelLD
+    private val _errorModelLD = MutableLiveData<ErrorModel>()
+
     private val userCountsObserver = Observer<List<FeedsEntity>> {
         val likesEntryList = mutableListOf<Entry>()
         val commentsEntryList = mutableListOf<Entry>()
@@ -112,7 +116,13 @@ constructor(
         backgroundThread.launch {
             when (val response = repo.allowUserDetails()) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getUserDetails: ${response.error}")
+                    _errorModelLD.postValue(
+                        ErrorModel(
+                            errorMsg = response.error,
+                            errorCode = response.code,
+                            showDialog = true
+                        )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
@@ -126,7 +136,15 @@ constructor(
                         repo.dropAllFeeds()
                         refreshUserDetails()
                     } else {
-                        Log.e("TAG", "getUserDetails: ${response.value.message()}")
+                        with(response.value){
+                            _errorModelLD.postValue(
+                                ErrorModel(
+                                    errorMsg = message(),
+                                    errorCode = code(),
+                                    showDialog = true
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -137,7 +155,13 @@ constructor(
         backgroundThread.launch {
             when (val response = repo.getUserDetails()) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getUserDetails: ${response.error}")
+                    _errorModelLD.postValue(
+                        ErrorModel(
+                            errorMsg = response.error,
+                            errorCode = response.code,
+                            showDialog = true
+                        )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
@@ -148,7 +172,15 @@ constructor(
                         getUserFeed()
                         _userDetails.postValue(response.value.body())
                     } else {
-                        Log.e("TAG", "getUserDetails: ${response.value.message()}")
+                        with(response.value){
+                            _errorModelLD.postValue(
+                                ErrorModel(
+                                    errorMsg = message(),
+                                    errorCode = code(),
+                                    showDialog = true
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -159,7 +191,13 @@ constructor(
         backgroundThread.launch {
             when (val response = repo.getAllFollowers(maxId)) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getAllFollowers: ${response.error}")
+                    _errorModelLD.postValue(
+                        ErrorModel(
+                            errorMsg = response.error,
+                            errorCode = response.code,
+                            showDialog = true
+                        )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
@@ -175,7 +213,15 @@ constructor(
                             _userFollowersDifference.postValue(increaseInFollowers)
                         }
                     } else {
-                        Log.e("TAG", "getAllFollowers: ${response.value.message()}")
+                        with(response.value){
+                            _errorModelLD.postValue(
+                                ErrorModel(
+                                    errorMsg = message(),
+                                    errorCode = code(),
+                                    showDialog = true
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -186,7 +232,13 @@ constructor(
         backgroundThread.launch {
             when (val response = repo.getAllFollowings(maxId)) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getAllFollowings: ${response.error}")
+                    _errorModelLD.postValue(
+                        ErrorModel(
+                            errorMsg = response.error,
+                            errorCode = response.code,
+                            showDialog = true
+                        )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful || response.value.body() != null) {
@@ -202,7 +254,15 @@ constructor(
                             _userFollowingsDifference.postValue(increaseInFollowings)
                         }
                     } else {
-                        Log.e("TAG", "getAllFollowings: ${response.value.message()}")
+                        with(response.value){
+                            _errorModelLD.postValue(
+                                ErrorModel(
+                                    errorMsg = message(),
+                                    errorCode = code(),
+                                    showDialog = true
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -213,7 +273,13 @@ constructor(
         backgroundThread.launch {
             when (val response = repo.getUserFeeds(maxId)) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getUserFeed: ${response.error}")
+                    _errorModelLD.postValue(
+                        ErrorModel(
+                            errorMsg = response.error,
+                            errorCode = response.code,
+                            showDialog = true
+                        )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
@@ -238,7 +304,15 @@ constructor(
                             )
                         }
                     } else {
-                        Log.e("TAG", "getUserFeed: ${response.value.message()}")
+                        with(response.value){
+                            _errorModelLD.postValue(
+                                ErrorModel(
+                                    errorMsg = message(),
+                                    errorCode = code(),
+                                    showDialog = true
+                                )
+                            )
+                        }
                     }
                 }
             }

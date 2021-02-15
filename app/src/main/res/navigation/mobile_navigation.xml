@@ -18,6 +18,23 @@
         android:id="@+id/homeFragment"
         android:name="com.pratham.project.fileio.ui.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_errorFragment"
+            app:destination="@id/errorFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/errorFragment"
+        android:name="com.pratham.project.fileio.ui.ErrorFragment"
+        android:label="ErrorFragment"
+        tools:layout="@layout/fragment_error" >
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="Error" />
+        <argument
+            android:name="subTitle"
+            app:argType="string" />
+    </dialog>
 
 </navigation>

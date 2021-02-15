@@ -3,6 +3,7 @@ package com.pratham.project.fileio.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.google.android.flexbox.*
@@ -63,6 +64,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         hashtagsAdapter.observeList(vm.hashtagsListLD, viewLifecycleOwner)
         locationsAdapter.observeList(vm.locationListLD, viewLifecycleOwner)
+
+        vm.errorModelLD.observe(viewLifecycleOwner){
+            if (it.showDialog){
+                view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToErrorFragment(
+                    it.errorTitle,
+                    it.errorMsg
+                ))
+            }
+        }
 
     }
 }
