@@ -7,8 +7,13 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_files"
-        android:icon="@drawable/ic_baseline_insert_drive_file_24"
-        android:title="@string/title_files" />
+        android:id="@+id/navigation_hashtags"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="@string/title_hashtags" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="@string/title_profile" />
 
 </menu>

@@ -8,6 +8,5 @@ data class LikesModel(
     @SerializedName("items") val items: List<Item>? = null,
     @SerializedName("more_available") val moreAvailable: Boolean? = null,
     @SerializedName("next_max_id") val nextMaxId: String? = null,
-    @SerializedName("num_results") val numResults: Int? = null,
-    @SerializedName("status") val status: String? = null
-)
+    @SerializedName("num_results") val numResults: Int? = null
+): BaseResponse()

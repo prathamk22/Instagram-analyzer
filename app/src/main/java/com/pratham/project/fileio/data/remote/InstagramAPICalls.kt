@@ -17,7 +17,7 @@ interface InstagramAPICalls {
     ): Response<UsernameInfo>
 
     @POST("accounts/current_user")
-    suspend fun allowUserEdit(
+    suspend fun  allowUserEdit(
             @Query("edit") edit: Boolean = true
     ): Response<UsernameInfo>
 

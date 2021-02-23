@@ -20,10 +20,7 @@ import com.pratham.project.fileio.data.remote.models.UsernameInfo
 import com.pratham.project.fileio.utils.base.BaseViewModel
 import com.pratham.project.fileio.data.utils.ResultWrapper
 import com.pratham.project.fileio.data.utils.toUserXXX
-import com.pratham.project.fileio.utils.SpannableModel
-import com.pratham.project.fileio.utils.getCommentsSpannableList
-import com.pratham.project.fileio.utils.getLikesSpannableList
-import com.pratham.project.fileio.utils.getPostsSpannableList
+import com.pratham.project.fileio.utils.*
 import com.pratham.project.fileio.utils.widgits.CustomGraphView
 import kotlinx.coroutines.launch
 import java.util.*
@@ -31,9 +28,9 @@ import java.util.*
 class HomeViewModel
 @ViewModelInject
 constructor(
-    private val repo: HomeRepositoryImpl,
-    private val prefsManager: PreferenceManager,
-    @Assisted private val savedStateHandle: SavedStateHandle
+        private val repo: HomeRepositoryImpl,
+        private val prefsManager: PreferenceManager,
+        @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     val loadingDone: LiveData<Boolean>
@@ -83,7 +80,7 @@ constructor(
     private val userCountsObserver = Observer<List<FeedsEntity>> {
         val likesEntryList = mutableListOf<Entry>()
         val commentsEntryList = mutableListOf<Entry>()
-        if (it.isNullOrEmpty()){
+        if (it.isNullOrEmpty()) {
             _likesPointMapLD.postValue(CustomGraphView.GraphDataModel(
                     Description().apply { text = "" },
                     emptyList(),
@@ -100,9 +97,9 @@ constructor(
         }
 
         val pointMap = CustomGraphView.GraphDataModel(
-            Description().apply { text = "" },
-            likesEntryList,
-            commentsEntryList
+                Description().apply { text = "" },
+                likesEntryList,
+                commentsEntryList
         )
         _likesPointMapLD.postValue(pointMap)
     }
@@ -117,11 +114,11 @@ constructor(
             when (val response = repo.allowUserDetails()) {
                 is ResultWrapper.GenericError -> {
                     _errorModelLD.postValue(
-                        ErrorModel(
-                            errorMsg = response.error,
-                            errorCode = response.code,
-                            showDialog = true
-                        )
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
                     )
                 }
                 is ResultWrapper.Success -> {
@@ -136,15 +133,7 @@ constructor(
                         repo.dropAllFeeds()
                         refreshUserDetails()
                     } else {
-                        with(response.value){
-                            _errorModelLD.postValue(
-                                ErrorModel(
-                                    errorMsg = message(),
-                                    errorCode = code(),
-                                    showDialog = true
-                                )
-                            )
-                        }
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }
@@ -156,11 +145,11 @@ constructor(
             when (val response = repo.getUserDetails()) {
                 is ResultWrapper.GenericError -> {
                     _errorModelLD.postValue(
-                        ErrorModel(
-                            errorMsg = response.error,
-                            errorCode = response.code,
-                            showDialog = true
-                        )
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
                     )
                 }
                 is ResultWrapper.Success -> {
@@ -172,15 +161,7 @@ constructor(
                         getUserFeed()
                         _userDetails.postValue(response.value.body())
                     } else {
-                        with(response.value){
-                            _errorModelLD.postValue(
-                                ErrorModel(
-                                    errorMsg = message(),
-                                    errorCode = code(),
-                                    showDialog = true
-                                )
-                            )
-                        }
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }
@@ -192,11 +173,11 @@ constructor(
             when (val response = repo.getAllFollowers(maxId)) {
                 is ResultWrapper.GenericError -> {
                     _errorModelLD.postValue(
-                        ErrorModel(
-                            errorMsg = response.error,
-                            errorCode = response.code,
-                            showDialog = true
-                        )
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
                     )
                 }
                 is ResultWrapper.Success -> {
@@ -213,15 +194,7 @@ constructor(
                             _userFollowersDifference.postValue(increaseInFollowers)
                         }
                     } else {
-                        with(response.value){
-                            _errorModelLD.postValue(
-                                ErrorModel(
-                                    errorMsg = message(),
-                                    errorCode = code(),
-                                    showDialog = true
-                                )
-                            )
-                        }
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }
@@ -233,11 +206,11 @@ constructor(
             when (val response = repo.getAllFollowings(maxId)) {
                 is ResultWrapper.GenericError -> {
                     _errorModelLD.postValue(
-                        ErrorModel(
-                            errorMsg = response.error,
-                            errorCode = response.code,
-                            showDialog = true
-                        )
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
                     )
                 }
                 is ResultWrapper.Success -> {
@@ -254,15 +227,7 @@ constructor(
                             _userFollowingsDifference.postValue(increaseInFollowings)
                         }
                     } else {
-                        with(response.value){
-                            _errorModelLD.postValue(
-                                ErrorModel(
-                                    errorMsg = message(),
-                                    errorCode = code(),
-                                    showDialog = true
-                                )
-                            )
-                        }
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }
@@ -274,20 +239,21 @@ constructor(
             when (val response = repo.getUserFeeds(maxId)) {
                 is ResultWrapper.GenericError -> {
                     _errorModelLD.postValue(
-                        ErrorModel(
-                            errorMsg = response.error,
-                            errorCode = response.code,
-                            showDialog = true
-                        )
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
                     )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val responseValue = response.value.body()
-                        if (responseValue?.moreAvailable == true){
+                        if (responseValue?.moreAvailable == true) {
                             getUserFeed(responseValue.nextMaxId, responseValue.items)
-                        }else{
-                            val allUserPosts = (responseValue?.items ?: emptyList()) + (previousList ?:  emptyList())
+                        } else {
+                            val allUserPosts = (responseValue?.items ?: emptyList()) + (previousList
+                                    ?: emptyList())
                             repo.addUserFeedToLocal(allUserPosts)
                             _userCommentsCount.postValue(allUserPosts.getCommentsSpannableList())
                             _userLikesCount.postValue(allUserPosts.getLikesSpannableList())
@@ -296,23 +262,17 @@ constructor(
                             _locationList.postValue(repo.analyzeLocations())
                             _loadingDone.postValue(true)
                             repo.saveUserVariousCounts(
-                                    userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
-                                    userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,
+                                    userFollowesCount = _userDetails.value?.user?.followerCount
+                                            ?: 0,
+                                    userFollowingsCount = _userDetails.value?.user?.followingCount
+                                            ?: 0,
                                     userLikesCount = allUserPosts.sumBy { it.likeCount ?: 0 },
                                     userCommentsCount = allUserPosts.sumBy { it.commentCount ?: 0 },
                                     userPostsCount = allUserPosts.size
                             )
                         }
                     } else {
-                        with(response.value){
-                            _errorModelLD.postValue(
-                                ErrorModel(
-                                    errorMsg = message(),
-                                    errorCode = code(),
-                                    showDialog = true
-                                )
-                            )
-                        }
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }

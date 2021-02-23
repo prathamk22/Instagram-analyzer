@@ -8,6 +8,5 @@ data class FollowersModel(
     @SerializedName("next_max_id") val nextMaxId: String? = null,
     @SerializedName("page_size") val pageSize: Int? = null,
     @SerializedName("sections") val sections: Any? = null,
-    @SerializedName("status") val status: String? = null,
     @SerializedName("users") val users: List<UserXX>? = null
-)
+): BaseResponse()
