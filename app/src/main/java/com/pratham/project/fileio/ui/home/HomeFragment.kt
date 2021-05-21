@@ -2,9 +2,11 @@ package com.pratham.project.fileio.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.PagerSnapHelper
 import com.google.android.flexbox.*
 import com.pratham.project.fileio.R
 import com.pratham.project.fileio.data.local.models.HashtagsCountModel
@@ -17,12 +19,12 @@ import com.pratham.project.fileio.utils.LocationsMarginDecoration
 import com.pratham.project.fileio.utils.base.BaseFragment
 import com.pratham.project.fileio.utils.observeList
 import com.pratham.project.fileio.utils.toDp
-import org.koin.androidx.viewmodel.ext.android.stateViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
-    //Testing
-    private val vm: HomeViewModel by stateViewModel()
+    private val vm: HomeViewModel by activityViewModels()
     private val hashtagsAdapter = object : GenericAdapter<HashtagsCountModel, HashtagsItemBinding>(R.layout.hashtags_item){
         override fun onBind(item: HashtagsCountModel, adapterItemBinding: HashtagsItemBinding) {
             adapterItemBinding.hashtagText.text = item.hashtag
@@ -45,24 +47,34 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.hashTagsRv.apply {
-            layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP).apply {
-                alignItems = AlignItems.STRETCH
-                justifyContent = JustifyContent.FLEX_START
-            }
-            adapter = hashtagsAdapter
-        }
-        binding.locationRv.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            adapter = locationsAdapter
-            addItemDecoration(LocationsMarginDecoration())
-        }
-
-        val snapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(binding.locationRv)
+//        binding.hashTagsRv.apply {
+//            layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP).apply {
+//                alignItems = AlignItems.STRETCH
+//                justifyContent = JustifyContent.FLEX_START
+//            }
+//            adapter = hashtagsAdapter
+//        }
+//        binding.locationRv.apply {
+//            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//            adapter = locationsAdapter
+//            addItemDecoration(LocationsMarginDecoration())
+//        }
+//
+//        val snapHelper = LinearSnapHelper()
+//        snapHelper.attachToRecyclerView(binding.locationRv)
 
         hashtagsAdapter.observeList(vm.hashtagsListLD, viewLifecycleOwner)
         locationsAdapter.observeList(vm.locationListLD, viewLifecycleOwner)
+
+        vm.errorModelLD.observe(viewLifecycleOwner){
+            navigateToLoginView()
+//            if (it.showDialog){
+//                view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToErrorFragment(
+//                    it.errorTitle,
+//                    it.errorMsg
+//                ))
+//            }
+        }
 
     }
 }

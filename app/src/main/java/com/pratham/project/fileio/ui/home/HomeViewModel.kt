@@ -1,9 +1,11 @@
 package com.pratham.project.fileio.ui.home
 
-import android.util.Log
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.pratham.project.fileio.data.PreferenceManager
@@ -11,23 +13,24 @@ import com.pratham.project.fileio.data.local.models.FeedsEntity
 import com.pratham.project.fileio.data.local.models.FollowersDifferenceModel
 import com.pratham.project.fileio.data.local.models.HashtagsCountModel
 import com.pratham.project.fileio.data.local.models.LocationCountModel
+import com.pratham.project.fileio.data.remote.models.ErrorModel
 import com.pratham.project.fileio.data.remote.models.Item
 import com.pratham.project.fileio.data.remote.models.UserXX
 import com.pratham.project.fileio.data.remote.models.UsernameInfo
 import com.pratham.project.fileio.utils.base.BaseViewModel
 import com.pratham.project.fileio.data.utils.ResultWrapper
 import com.pratham.project.fileio.data.utils.toUserXXX
-import com.pratham.project.fileio.utils.SpannableModel
-import com.pratham.project.fileio.utils.getCommentsSpannableList
-import com.pratham.project.fileio.utils.getLikesSpannableList
-import com.pratham.project.fileio.utils.getPostsSpannableList
+import com.pratham.project.fileio.utils.*
 import com.pratham.project.fileio.utils.widgits.CustomGraphView
 import kotlinx.coroutines.launch
 import java.util.*
 
-class HomeViewModel(
-    private val repo: HomeRepository,
-    private val prefsManager: PreferenceManager
+class HomeViewModel
+@ViewModelInject
+constructor(
+        private val repo: HomeRepositoryImpl,
+        private val prefsManager: PreferenceManager,
+        @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     val loadingDone: LiveData<Boolean>
@@ -38,17 +41,17 @@ class HomeViewModel(
         get() = _userDetails
     private val _userDetails = MutableLiveData<UsernameInfo>()
 
-    val userPostsCount: LiveData<List<SpannableModel>>
+    val userPostsCount: LiveData<Int>
         get() = _userPostsCount
-    private val _userPostsCount = MutableLiveData<List<SpannableModel>>()
+    private val _userPostsCount = MutableLiveData<Int>()
 
-    val userLikesCount: LiveData<List<SpannableModel>>
+    val userLikesCount: LiveData<Int>
         get() = _userLikesCount
-    private val _userLikesCount = MutableLiveData<List<SpannableModel>>()
+    private val _userLikesCount = MutableLiveData<Int>()
 
-    val userCommentsCount: LiveData<List<SpannableModel>>
+    val userCommentsCount: LiveData<Int>
         get() = _userCommentsCount
-    private val _userCommentsCount = MutableLiveData<List<SpannableModel>>()
+    private val _userCommentsCount = MutableLiveData<Int>()
 
     val userFollowersDifference: LiveData<FollowersDifferenceModel>
         get() = _userFollowersDifference
@@ -70,10 +73,14 @@ class HomeViewModel(
         get() = _locationList
     private val _locationList = MutableLiveData<List<LocationCountModel>>()
 
+    val errorModelLD: LiveData<ErrorModel>
+        get() = _errorModelLD
+    private val _errorModelLD = MutableLiveData<ErrorModel>()
+
     private val userCountsObserver = Observer<List<FeedsEntity>> {
         val likesEntryList = mutableListOf<Entry>()
         val commentsEntryList = mutableListOf<Entry>()
-        if (it.isNullOrEmpty()){
+        if (it.isNullOrEmpty()) {
             _likesPointMapLD.postValue(CustomGraphView.GraphDataModel(
                     Description().apply { text = "" },
                     emptyList(),
@@ -90,9 +97,9 @@ class HomeViewModel(
         }
 
         val pointMap = CustomGraphView.GraphDataModel(
-            Description().apply { text = "" },
-            likesEntryList,
-            commentsEntryList
+                Description().apply { text = "" },
+                likesEntryList,
+                commentsEntryList
         )
         _likesPointMapLD.postValue(pointMap)
     }
@@ -106,7 +113,13 @@ class HomeViewModel(
         backgroundThread.launch {
             when (val response = repo.allowUserDetails()) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getUserDetails: ${response.error}")
+                    _errorModelLD.postValue(
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
@@ -120,7 +133,7 @@ class HomeViewModel(
                         repo.dropAllFeeds()
                         refreshUserDetails()
                     } else {
-                        Log.e("TAG", "getUserDetails: ${response.value.message()}")
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }
@@ -131,7 +144,13 @@ class HomeViewModel(
         backgroundThread.launch {
             when (val response = repo.getUserDetails()) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getUserDetails: ${response.error}")
+                    _errorModelLD.postValue(
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
@@ -142,7 +161,7 @@ class HomeViewModel(
                         getUserFeed()
                         _userDetails.postValue(response.value.body())
                     } else {
-                        Log.e("TAG", "getUserDetails: ${response.value.message()}")
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }
@@ -153,7 +172,13 @@ class HomeViewModel(
         backgroundThread.launch {
             when (val response = repo.getAllFollowers(maxId)) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getAllFollowers: ${response.error}")
+                    _errorModelLD.postValue(
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
@@ -169,7 +194,7 @@ class HomeViewModel(
                             _userFollowersDifference.postValue(increaseInFollowers)
                         }
                     } else {
-                        Log.e("TAG", "getAllFollowers: ${response.value.message()}")
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }
@@ -180,7 +205,13 @@ class HomeViewModel(
         backgroundThread.launch {
             when (val response = repo.getAllFollowings(maxId)) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getAllFollowings: ${response.error}")
+                    _errorModelLD.postValue(
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful || response.value.body() != null) {
@@ -196,7 +227,7 @@ class HomeViewModel(
                             _userFollowingsDifference.postValue(increaseInFollowings)
                         }
                     } else {
-                        Log.e("TAG", "getAllFollowings: ${response.value.message()}")
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }
@@ -207,32 +238,41 @@ class HomeViewModel(
         backgroundThread.launch {
             when (val response = repo.getUserFeeds(maxId)) {
                 is ResultWrapper.GenericError -> {
-                    Log.e("TAG", "getUserFeed: ${response.error}")
+                    _errorModelLD.postValue(
+                            ErrorModel(
+                                    errorMsg = response.error,
+                                    errorCode = response.code,
+                                    showDialog = true
+                            )
+                    )
                 }
                 is ResultWrapper.Success -> {
                     if (response.value.isSuccessful) {
                         val responseValue = response.value.body()
-                        if (responseValue?.moreAvailable == true){
+                        if (responseValue?.moreAvailable == true) {
                             getUserFeed(responseValue.nextMaxId, responseValue.items)
-                        }else{
-                            val allUserPosts = (responseValue?.items ?: emptyList()) + (previousList ?:  emptyList())
+                        } else {
+                            val allUserPosts = (responseValue?.items ?: emptyList()) + (previousList
+                                    ?: emptyList())
                             repo.addUserFeedToLocal(allUserPosts)
-                            _userCommentsCount.postValue(allUserPosts.getCommentsSpannableList())
-                            _userLikesCount.postValue(allUserPosts.getLikesSpannableList())
-                            _userPostsCount.postValue(allUserPosts.getPostsSpannableList())
+                            _userCommentsCount.postValue(allUserPosts.sumBy { it.commentCount ?: 0 })
+                            _userLikesCount.postValue(allUserPosts.sumBy { it.likeCount ?: 0 })
+                            _userPostsCount.postValue(allUserPosts.size)
                             _hashtagsLD.postValue(repo.analyzeHastags())
                             _locationList.postValue(repo.analyzeLocations())
                             _loadingDone.postValue(true)
                             repo.saveUserVariousCounts(
-                                    userFollowesCount = _userDetails.value?.user?.followerCount ?: 0,
-                                    userFollowingsCount = _userDetails.value?.user?.followingCount ?: 0,
+                                    userFollowesCount = _userDetails.value?.user?.followerCount
+                                            ?: 0,
+                                    userFollowingsCount = _userDetails.value?.user?.followingCount
+                                            ?: 0,
                                     userLikesCount = allUserPosts.sumBy { it.likeCount ?: 0 },
                                     userCommentsCount = allUserPosts.sumBy { it.commentCount ?: 0 },
                                     userPostsCount = allUserPosts.size
                             )
                         }
                     } else {
-                        Log.e("TAG", "getUserFeed: ${response.value.message()}")
+                        _errorModelLD.postValue(response.value.getErrorModel())
                     }
                 }
             }

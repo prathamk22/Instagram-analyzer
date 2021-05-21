@@ -12,7 +12,7 @@ import com.pratham.project.fileio.data.utils.toUserXX
 import java.util.*
 import kotlin.collections.HashMap
 
-class HomeRepository(
+class HomeRepositoryImpl(
         private val instagramAPICalls: InstagramAPICalls,
         private val prefsManager: PreferenceManager,
         private val usernameDao: UsernameDao,
@@ -20,58 +20,58 @@ class HomeRepository(
         private val followingsDao: FollowingsDao,
         private val userLocalCountsDao: UserLocalCountsDao,
         private val feedsDao: FeedsDao
-) {
+): IHomeRepository {
 
     companion object{
         const val HASHTAGS_SIZE = 6
         const val LOCATIONS_SIZE = 6
     }
 
-    suspend fun getUserDetails() = safeApiCall { instagramAPICalls.getUserDetails(prefsManager.userName) }
+    override suspend fun getUserDetails() = safeApiCall { instagramAPICalls.getUserDetails(prefsManager.userName) }
 
-    suspend fun allowUserDetails() = safeApiCall { instagramAPICalls.allowUserEdit() }
+    override suspend fun allowUserDetails() = safeApiCall { instagramAPICalls.allowUserEdit() }
 
-    suspend fun dropAllFollowers() = followersDao.deleteAll()
+    override suspend fun dropAllFollowers() = followersDao.deleteAll()
 
-    suspend fun dropAllFollowings() = followingsDao.deleteAll()
+    override suspend fun dropAllFollowings() = followingsDao.deleteAll()
 
-    suspend fun dropAllFeeds() = feedsDao.deleteAll()
+    override suspend fun dropAllFeeds() = feedsDao.deleteAll()
 
-    suspend fun getAllFollowers(maxId: String?) =
+    override suspend fun getAllFollowers(maxId: String?) =
             safeApiCall { instagramAPICalls.getAllFollowers(prefsManager.userProfileId, maxId = maxId) }
 
-    suspend fun getAllFollowings(maxId: String?) = safeApiCall {
+    override suspend fun getAllFollowings(maxId: String?) = safeApiCall {
         instagramAPICalls.getAllFollowings(
                 prefsManager.userProfileId,
                 maxId = maxId
         )
     }
 
-    suspend fun getLikesFromFeeds(maxId: String?) = safeApiCall { instagramAPICalls.getLikesFromFeeds(maxId) }
+    override suspend fun getLikesFromFeeds(maxId: String?) = safeApiCall { instagramAPICalls.getLikesFromFeeds(maxId) }
 
-    suspend fun getUserFeeds(maxId: String?) =
+    override suspend fun getUserFeeds(maxId: String?) =
             safeApiCall { instagramAPICalls.getUserFeed(prefsManager.userProfileId, maxId) }
 
-    fun getUserPosts() = feedsDao.getUserPostsLD(prefsManager.userProfileId)
+    override fun getUserPosts() = feedsDao.getUserPostsLD(prefsManager.userProfileId)
 
-    suspend fun addFollowersToLocal(followersList: List<UserXX>?) {
+    override suspend fun addFollowersToLocal(followersList: List<UserXX>?) {
         followersList?.forEach { it.connectedToUserPk = prefsManager.userProfileId }
         followersList?.let { followersDao.insertAll(it) }
     }
 
-    suspend fun addFollowingsToLocal(followingList: List<UserXXX>?) {
+    override suspend fun addFollowingsToLocal(followingList: List<UserXXX>?) {
         followingList?.let { followingsDao.insertAll(it) }
     }
 
-    suspend fun addUserToLocal(userItem: User?) {
+    override suspend fun addUserToLocal(userItem: User?) {
         userItem.toLocalModel(prefsManager)?.let { usernameDao.insert(it) }
     }
 
-    suspend fun addUserFeedToLocal(items: List<Item>?) {
+    override suspend fun addUserFeedToLocal(items: List<Item>?) {
         items.toLocalUserFeed()?.let { feedsDao.insertAll(it) }
     }
 
-    suspend fun getDifferenceOfNewFollowers(newFollowers: List<UserXX>?): FollowersDifferenceModel {
+    override suspend fun getDifferenceOfNewFollowers(newFollowers: List<UserXX>?): FollowersDifferenceModel {
         if (newFollowers.isNullOrEmpty()) {
             return FollowersDifferenceModel(0, 0, emptyList(), emptyList())
         }
@@ -104,7 +104,7 @@ class HomeRepository(
         )
     }
 
-    suspend fun getDifferenceOfNewFollowings(newFollowers: List<UserXX>?): FollowersDifferenceModel {
+    override suspend fun getDifferenceOfNewFollowings(newFollowers: List<UserXX>?): FollowersDifferenceModel {
         if (newFollowers.isNullOrEmpty()) {
             return FollowersDifferenceModel(0, 0, emptyList(), emptyList())
         }
@@ -136,7 +136,7 @@ class HomeRepository(
         )
     }
 
-    suspend fun saveUserVariousCounts(
+    override suspend fun saveUserVariousCounts(
             userLikesCount: Int,
             userCommentsCount: Int,
             userFollowesCount: Int,
@@ -178,7 +178,7 @@ class HomeRepository(
         )
     }
 
-    suspend fun analyzeHastags(): List<HashtagsCountModel> {
+    override suspend fun analyzeHastags(): List<HashtagsCountModel> {
         val userPosts = feedsDao.getUserPosts(prefsManager.userProfileId)
         val map: HashMap<String, Int> = HashMap()
 
@@ -198,7 +198,7 @@ class HomeRepository(
         return map.map { HashtagsCountModel(it.key, it.value) }.subList(0, if (map.size > HASHTAGS_SIZE) HASHTAGS_SIZE else map.size)
     }
 
-    suspend fun analyzeLocations(): List<LocationCountModel> {
+    override suspend fun analyzeLocations(): List<LocationCountModel> {
         val userPosts = feedsDao.getUserPosts(prefsManager.userProfileId)
         val map: HashMap<Location, Int> = HashMap()
 

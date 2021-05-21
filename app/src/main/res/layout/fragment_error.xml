@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="subTitle"
+            type="String" />
+
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:padding="@dimen/dp15"
+        tools:context=".ui.ErrorFragment">
+
+        <com.pratham.project.fileio.utils.widgits.MyConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="@dimen/dp10"
+            app:cornerRadius="@dimen/dp20">
+
+            <com.pratham.project.fileio.utils.widgits.MyTextView
+                android:id="@+id/titleTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{title}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_18sp"
+                android:textStyle="bold"
+                tools:text="Error Title" />
+
+            <com.pratham.project.fileio.utils.widgits.MyTextView
+                android:id="@+id/subTitleTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{subTitle}"
+                android:textColor="@color/grey"
+                android:layout_marginTop="@dimen/dp10"
+                app:layout_constraintTop_toBottomOf="@id/titleTv"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                tools:text="Error Title" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                app:layout_constraintTop_toBottomOf="@id/subTitleTv"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="error_lottie.json"
+                app:lottie_loop="true" />
+
+        </com.pratham.project.fileio.utils.widgits.MyConstraintLayout>
+
+    </FrameLayout>
+
+</layout>

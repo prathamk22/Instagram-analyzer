@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.pratham.project.fileio.utils.save
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class PreferenceManager constructor(
-    context: Context
+class PreferenceManager @Inject constructor(
+    @ApplicationContext context: Context
 ) {
 
     companion object{
@@ -53,5 +55,9 @@ class PreferenceManager constructor(
         set(value) {
             sharedPrefs.save(USER_INSTAGRAM_ID, value)
         }
+
+    fun logOut(){
+        sharedPrefs.edit().clear().apply()
+    }
 
 }

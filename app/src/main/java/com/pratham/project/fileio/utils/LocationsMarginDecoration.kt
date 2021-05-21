@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class LocationsMarginDecoration : RecyclerView.ItemDecoration() {
 
-    val margin = 15
+    private val margin = 15
 
     override fun getItemOffsets(
         outRect: Rect,

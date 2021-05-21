@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="title"
+            name="sectionTitle"
             type="String" />
 
     </data>
@@ -14,14 +14,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp10"
-        app:layout_constraintTop_toBottomOf="@id/likesGrpahView">
+        android:padding="@dimen/dp10">
 
         <com.pratham.project.fileio.utils.widgits.MyTextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{title}"
+            android:text="@{sectionTitle}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_18sp"
             android:textStyle="bold"

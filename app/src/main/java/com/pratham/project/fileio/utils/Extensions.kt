@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
+import android.util.Log
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -19,8 +20,13 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.gson.Gson
 import com.pratham.project.fileio.R
+import com.pratham.project.fileio.data.remote.models.BaseResponse
+import com.pratham.project.fileio.data.remote.models.ErrorModel
 import com.pratham.project.fileio.data.remote.models.Item
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 fun SharedPreferences.save(key: String, value: Any) {
     val edit = edit()
@@ -193,3 +199,16 @@ fun <ItemType, DataBinding : ViewDataBinding> GenericAdapter<ItemType, DataBindi
 fun Int.toDp(displayMetrics: DisplayMetrics) = toFloat().toDp(displayMetrics).toInt()
 
 fun Float.toDp(displayMetrics: DisplayMetrics) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, displayMetrics)
+
+val ResponseBody?.baseError: BaseResponse?
+    get() = Gson().fromJson(this?.string(), BaseResponse::class.java)
+
+fun <T> Response<T>.getErrorModel(): ErrorModel{
+    val baseError = errorBody()?.baseError
+    return ErrorModel(
+            errorTitle = baseError?.errorTitle ?: message(),
+            errorMsg = baseError?.errorBody ?: message(),
+            errorCode = code(),
+            showDialog = true
+    )
+}
