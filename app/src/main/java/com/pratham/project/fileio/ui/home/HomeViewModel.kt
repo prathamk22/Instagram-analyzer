@@ -41,17 +41,17 @@ constructor(
         get() = _userDetails
     private val _userDetails = MutableLiveData<UsernameInfo>()
 
-    val userPostsCount: LiveData<List<SpannableModel>>
+    val userPostsCount: LiveData<Int>
         get() = _userPostsCount
-    private val _userPostsCount = MutableLiveData<List<SpannableModel>>()
+    private val _userPostsCount = MutableLiveData<Int>()
 
-    val userLikesCount: LiveData<List<SpannableModel>>
+    val userLikesCount: LiveData<Int>
         get() = _userLikesCount
-    private val _userLikesCount = MutableLiveData<List<SpannableModel>>()
+    private val _userLikesCount = MutableLiveData<Int>()
 
-    val userCommentsCount: LiveData<List<SpannableModel>>
+    val userCommentsCount: LiveData<Int>
         get() = _userCommentsCount
-    private val _userCommentsCount = MutableLiveData<List<SpannableModel>>()
+    private val _userCommentsCount = MutableLiveData<Int>()
 
     val userFollowersDifference: LiveData<FollowersDifferenceModel>
         get() = _userFollowersDifference
@@ -255,9 +255,9 @@ constructor(
                             val allUserPosts = (responseValue?.items ?: emptyList()) + (previousList
                                     ?: emptyList())
                             repo.addUserFeedToLocal(allUserPosts)
-                            _userCommentsCount.postValue(allUserPosts.getCommentsSpannableList())
-                            _userLikesCount.postValue(allUserPosts.getLikesSpannableList())
-                            _userPostsCount.postValue(allUserPosts.getPostsSpannableList())
+                            _userCommentsCount.postValue(allUserPosts.sumBy { it.commentCount ?: 0 })
+                            _userLikesCount.postValue(allUserPosts.sumBy { it.likeCount ?: 0 })
+                            _userPostsCount.postValue(allUserPosts.size)
                             _hashtagsLD.postValue(repo.analyzeHastags())
                             _locationList.postValue(repo.analyzeLocations())
                             _loadingDone.postValue(true)

@@ -17,77 +17,50 @@
             name="increaseNumber"
             type="Integer" />
 
-        <variable
-            name="decreaseNumber"
-            type="Integer" />
-
-        <variable
-            name="backgroundGradient"
-            type="android.graphics.drawable.Drawable" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{backgroundGradient}"
-        android:padding="@dimen/dp20"
-        tools:background="@drawable/followers_gradient">
-
-        <com.pratham.project.fileio.utils.widgits.MyTextView
-            android:id="@+id/followersText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{title}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp18"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/followers" />
+        android:paddingTop="@dimen/dp8"
+        android:paddingStart="@dimen/dp16"
+        android:paddingEnd="@dimen/dp16"
+        android:paddingBottom="@dimen/dp8">
 
         <com.pratham.project.fileio.utils.widgits.MyTextView
             android:id="@+id/followersCountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.valueOf(count)}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp50"
-            android:textStyle="bold"
+            android:textColor="@color/asphalt"
+            android:textSize="@dimen/sp16"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/followersText"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="132" />
+
+        <com.pratham.project.fileio.utils.widgits.MyTextView
+            android:id="@+id/followersText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{title}"
+            android:textColor="@color/topColor"
+            android:textSize="@dimen/sp16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/followersCountText"
+            tools:text="@string/followers" />
 
         <com.pratham.project.fileio.utils.widgits.MyTextView
             android:id="@+id/increase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_baseline_arrow_upward_24"
             android:gravity="center"
             android:text="@{String.valueOf(increaseNumber)}"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp16"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/decrease"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/followersCountText"
-            app:layout_constraintTop_toTopOf="@id/followersCountText"
-            tools:text="40" />
-
-        <com.pratham.project.fileio.utils.widgits.MyTextView
-            android:id="@+id/decrease"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_baseline_arrow_downward_24"
-            android:gravity="center"
-            android:text="@{String.valueOf(decreaseNumber)}"
-            android:textColor="@color/white"
+            android:textColor="@color/green"
             android:textSize="@dimen/sp16"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/followersCountText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/followersCountText"
-            app:layout_constraintTop_toBottomOf="@id/increase"
             tools:text="40" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

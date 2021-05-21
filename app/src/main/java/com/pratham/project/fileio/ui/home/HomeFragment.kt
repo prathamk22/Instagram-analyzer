@@ -47,21 +47,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.hashTagsRv.apply {
-            layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP).apply {
-                alignItems = AlignItems.STRETCH
-                justifyContent = JustifyContent.FLEX_START
-            }
-            adapter = hashtagsAdapter
-        }
-        binding.locationRv.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            adapter = locationsAdapter
-            addItemDecoration(LocationsMarginDecoration())
-        }
-
-        val snapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(binding.locationRv)
+//        binding.hashTagsRv.apply {
+//            layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP).apply {
+//                alignItems = AlignItems.STRETCH
+//                justifyContent = JustifyContent.FLEX_START
+//            }
+//            adapter = hashtagsAdapter
+//        }
+//        binding.locationRv.apply {
+//            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//            adapter = locationsAdapter
+//            addItemDecoration(LocationsMarginDecoration())
+//        }
+//
+//        val snapHelper = LinearSnapHelper()
+//        snapHelper.attachToRecyclerView(binding.locationRv)
 
         hashtagsAdapter.observeList(vm.hashtagsListLD, viewLifecycleOwner)
         locationsAdapter.observeList(vm.locationListLD, viewLifecycleOwner)
